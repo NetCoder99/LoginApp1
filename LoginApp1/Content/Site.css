@@ -22,3 +22,63 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.bold {
+    font-weight: bold;
+}
+
+.lred {
+    background-color: #f2dede;
+}
+
+
+.lgreen {
+    background-color: #cbfdcb;
+}
+
+.hght_1em {
+    height: 1em;
+}
+
+.display_block {
+    display: block;
+}
+
+.margin_left_vsmall {
+    margin-left: 3px;
+}
+
+.margin_top_vsmall {
+    margin-top: 3px;
+}
+
+.margin_top_none {
+    margin-top: 0;
+}
+
+.margin_bottom_none {
+    margin-bottom: 0;
+}
+
+.margin_bottom_small {
+    margin-bottom: 5px;
+}
+
+.static_error {
+    height: 1em;
+    display: block;
+    -ms-transform: scale(.90); /* IE */
+    -moz-transform: scale(.90); /* FF */
+    -webkit-transform: scale(.90); /* Safari and Chrome */
+    -o-transform: scale(.90); /* Opera */
+    transform: scale(.90);
+}
+
+input[type=checkbox] {
+    -ms-transform: scale(1.5); /* IE */
+    -moz-transform: scale(1.5); /* FF */
+    -webkit-transform: scale(1.5); /* Safari and Chrome */
+    -o-transform: scale(1.5); /* Opera */
+    transform: scale(1.5);
+}
+

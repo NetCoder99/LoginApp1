@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "Login2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Login2</h2>
+@using (Ajax.BeginForm("Login2", "Account", null,
+    new AjaxOptions { HttpMethod = "POST", OnBegin = "OnBegin", OnComplete = "OnComplete", OnFailure = "OnFailure(xhr, status)" },
+    new { id = "myform" }))
+{
+    <label id="lbl_message"></label>
+    <button id="btn_submit" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            console.log("ready to rock and roll....");
+        });
+
+        function OnBegin() {
+            console.log("OnBegin");
+        }
+
+        function OnComplete(redirectUrl) {
+            console.log("OnComplete");
+        }
+
+        function OnFailure(xhr, status) {
+            console.log("OnFailure");
+        }
+
+    </script>
+}

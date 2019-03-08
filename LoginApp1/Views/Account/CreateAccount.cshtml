@@ -1,0 +1,218 @@
+﻿@model LoginApp1.Models.Account.AppUser
+
+@{
+    ViewBag.Title = "CreateAccount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Ajax.BeginForm("CreateAccount", "Account", null,
+    new AjaxOptions {
+        HttpMethod = "POST",
+        OnBegin = "OnBegin",
+        OnComplete = "OnComplete",
+        OnFailure = "OnFailure(xhr, status)" },
+    new { id = "myform" }))
+{
+
+        @Html.AntiForgeryToken()
+
+        <div class="logo mb-3">
+            <div class="col-md-12 text-center">
+                <h2>Create your account using the fields below:</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-8">
+                <div>
+                    @if (@ViewBag.backLink == "ManageAccounts")
+                    {
+                        @Html.ActionLink("Back to Manage Accounts", "ManageAccounts")
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back to login page", "Login")
+                    }
+
+                </div>
+                <hr class="margin_bottom_none" />
+                <strong>Required Fields: Need this for access to the web site.</strong>
+                <hr class="margin_top_none" />
+                <div class="row margin_bottom_small">
+                    <div class="form-group col-xs-6 margin_bottom_small">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger static_error email_error" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-6 margin_bottom_small">
+                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
+                        @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger static_error password_error" })
+                        <span class="pssword_match_error text-danger static_error"></span>
+                    </div>
+
+                    <div class="form-group col-xs-6 margin_bottom_small">
+                        @Html.LabelFor(model => model.PasswordConfirm, htmlAttributes: new { @class = "control-label " })
+                        @Html.PasswordFor(model => model.PasswordConfirm, new { htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
+                        @Html.ValidationMessageFor(model => model.PasswordConfirm, "", new { @class = "text-danger static_error password_confirm_error" })
+                    </div>
+                </div>
+
+                <hr class="margin_bottom_none margin_top_none" />
+                <strong>Optional Fields: Personal Information</strong>
+                <hr class="margin_top_none" />
+
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger static_error" })
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger static_error" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
+                        @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger static_error" })
+                    </div>
+
+                    <div class="form-group col-xs-6">
+                        @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control small_inp_box phone_number" } })
+                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger static_error" })
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-xs-6">
+                        <label class="control-label">Notification Types</label>
+                        <div class="form-group " style="margin-top:5px;">
+                            <div class="col-xs-6">
+                                @Html.CheckBoxFor(m => m.PrefEmail, new { @checked = "true", @class = "" })
+                                @Html.LabelFor(model => model.PrefEmail, htmlAttributes: new { @class = "control-label margin_left_vsmall" })
+                            </div>
+                            <div class="col-xs-6">
+                                @Html.CheckBoxFor(m => m.PrefText, new { @checked = "checked" })
+                                @Html.LabelFor(model => model.PrefText, htmlAttributes: new { @class = "control-label margin_left_vsmall" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="form-group col-xs-3 text-center "></div>
+            <div class="form-group col-xs-4 text-center ">
+                <button id="btn_submit" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Create Account</button>
+            </div>
+            <div class="form-group col-xs-3 text-center "></div>
+
+        </div>
+}
+
+    @section scripts{
+        <script>
+            $(document).ready(function () {
+                console.log("ready to rock and roll....");
+                $(".small_inp_box:first").focus();
+                $(".small_inp_box").addClass("lgreen");
+                $("input:password").addClass("lgreen");
+                $("input:password").addClass("form-control");
+            });
+
+            function OnBegin() {
+                DisableInputs(true);
+            }
+
+            function OnComplete() {
+                DisableInputs(false);
+                $("#btn_submit").text("Create Account");
+            }
+
+            function OnFailure(xhr, status) {
+                DisableInputs(false);
+                $("#btn_submit").text("Create Account");
+                $(".email_error").text(xhr.responseJSON.param2);
+                $("#Email").removeClass("lgreen");
+                $("#Email").addClass("lred");
+            }
+
+            function DisableInputs(flag) {
+                if (flag) {
+                    $(".small_inp_box").prop("disabled", true);
+                    $("input:password").prop("disabled", true);
+                    $("#btn_submit").prop("disabled", true);
+                    $("#btn_submit").text("Processing", true);
+                }
+                else {
+                    $(".small_inp_box").prop("disabled", false);
+                    $("input:password").prop("disabled", false);
+                    $("#btn_submit").prop("disabled", false);
+                    $("#btn_submit").text("Create Account");
+                }
+            }
+
+            $("input:password").focusout(function () {
+                console.log("checking for invalids");
+                var fv = $('#myform').validate();
+                if (!$(this).valid()) {
+                    $(this).removeClass("lgreen");
+                    $(this).addClass("lred");
+                    if (this.name == "PasswordConfirm" || this.name == "Password") {
+                        console.log("PasswordConfirm was invalid");
+                        //$("#Password").removeClass("lgreen");
+                        //$("#Password").addClass("lred");
+                        //$("#PasswordConfirm").removeClass("lgreen");
+                        //$("#PasswordConfirm").addClass("lred");
+                    }
+                    else {
+                        $(this).addClass("lred");
+                        $(this).removeClass("lgreen");
+                    }
+                }
+                else {
+                    if (this.name == "PasswordConfirm" || this.name == "Password") {
+                        console.log("PasswordConfirm was valid");
+                        $("#Password").removeClass("lred");
+                        $("#Password").addClass("lgreen");
+                        $("#PasswordConfirm").removeClass("lred");
+                        $("#PasswordConfirm").addClass("lgreen");
+                    }
+                    else {
+                        $(this).addClass("lgreen");
+                        $(this).removeClass("lred");
+                    }
+                    console.log("valid!");
+                }
+            });
+
+
+            $(".small_inp_box").focusout(function () {
+                console.log("checking for invalids");
+                var fv = $('#myform').validate();
+                if (!$(this).valid()) {
+                    $(this).removeClass("lgreen");
+                    $(this).addClass("lred");
+                }
+                else {
+                    $(this).addClass("lgreen");
+                    $(this).removeClass("lred");
+                    console.log("valid!");
+                }
+            });
+
+        </script>
+    }

@@ -23,6 +23,11 @@ textarea {
     max-width: 280px;
 }
 
+.float_right{
+    display:inline-block;
+    float:right;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -60,6 +65,9 @@ textarea {
     margin-bottom: 0;
 }
 
+.lcl_hidden {
+    display:none;
+}
 .margin_bottom_small {
     margin-bottom: 5px;
 }

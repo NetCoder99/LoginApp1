@@ -12,6 +12,10 @@ namespace LoginApp1.Models.Account
     [Table("AppUsers", Schema = "LoginApp1")]
     public class AppUser : IdentityUser
     {
+        public AppUser()
+        {
+            CreateDate = DateTime.Now;
+        }
         [Required(ErrorMessage = "Email address is required")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         [Index(IsUnique = true)]
@@ -53,5 +57,7 @@ namespace LoginApp1.Models.Account
         [Display(Name = "Notify Text")]
         public bool PrefText { get; set; }
 
+        [Display(Name = "Create Date")]
+        public DateTime CreateDate { get; set; }
     }
 }

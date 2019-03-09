@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 
-namespace LoginApp1.Classes.OWIN
+namespace LoginApp1.Classes.Account
 {
     public class HashFunctions
     {

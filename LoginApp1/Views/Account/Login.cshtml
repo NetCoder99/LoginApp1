@@ -6,7 +6,11 @@
 
 
 @using (Ajax.BeginForm("Login", "Account", null,
-    new AjaxOptions { HttpMethod = "POST", OnBegin= "OnBegin", OnComplete= "OnComplete",  OnFailure = "OnFailure(xhr, status)" },
+    new AjaxOptions {
+        HttpMethod = "POST",
+        OnBegin = "OnBegin",
+        OnSuccess = "OnSuccess(xhr, status)",
+        OnFailure = "OnFailure(xhr, status)" },
     new { id = "myform" }))
 {
     @Html.AntiForgeryToken()
@@ -62,14 +66,14 @@
             $("#btn_submit").prop("disabled", true);
         }
 
-        function OnComplete(redirectUrl) {
-            console.log(redirectUrl);
+        function OnSuccess(redirectUrl) {
             $(".small_inp_box").prop("disabled", false);
-            $("input:password").prop("disabled", false);
             $("#btn_submit").prop("disabled", false);
-            //if (redirectUrl.status == 200) {
-            //    window.location.href = redirectUrl.responseJSON.url;
-            //}
+            $("#btn_submit").text("Login");
+            console.log("OnSuccess:" + redirectUrl.responseJSON.url);
+            if (redirectUrl.status == 200) {
+                window.location.href = redirectUrl.responseJSON.url;
+            }
         }
 
         function OnFailure(xhr, status) {
@@ -83,7 +87,7 @@
                 $("#UserName").removeClass("lgreen");
                 $("#UserName").addClass("lred");
             }
-            if (xhr.responseJSON.param1 == "PassWord") {
+            if (xhr.responseJSON.param1 == "Password") {
                 $("#PassWordError").text(xhr.responseJSON.param2);
                 $("#PassWord").removeClass("lgreen");
                 $("#PassWord").addClass("lred");

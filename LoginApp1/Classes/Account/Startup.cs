@@ -6,7 +6,7 @@ using LoginApp1.DataConnections;
 using LoginApp1.Models.Account;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace LoginApp1.Classes.OWIN
+namespace LoginApp1.Classes.Account
 {
     public class Startup
     {
@@ -28,9 +28,7 @@ namespace LoginApp1.Classes.OWIN
                 LoginPath = new PathString("/Account/Login"),
             });
 
-            //app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-            //app.CreatePerOwinContext<AppRoleManager>(AppRoleManager.Create);
-            //ConfigureAuth(app);
+            //ConfigureAuth(app); // <-- this
         }
 
     }

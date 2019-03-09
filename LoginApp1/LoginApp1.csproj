@@ -159,18 +159,28 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Classes\OWIN\AppUserManager.cs" />
-    <Compile Include="Classes\OWIN\HashFunctions.cs" />
-    <Compile Include="Classes\OWIN\Startup.cs" />
+    <Compile Include="Classes\Account\AppUserManager.cs" />
+    <Compile Include="Classes\Account\HashFunctions.cs" />
+    <Compile Include="Classes\Account\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DataConnections\UserAccountDB.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903081651360_InitialCreate.cs" />
+    <Compile Include="Migrations\201903081651360_InitialCreate.Designer.cs">
+      <DependentUpon>201903081651360_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903091906049_CreateDate.cs" />
+    <Compile Include="Migrations\201903091906049_CreateDate.Designer.cs">
+      <DependentUpon>201903091906049_CreateDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account\AppRole.cs" />
     <Compile Include="Models\Account\AppUser.cs" />
     <Compile Include="Models\Account\LoginCreds.cs" />
+    <Compile Include="Models\BaseViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +188,13 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Icons\Guide.ico" />
+    <Content Include="Content\Icons\Icon1.ico" />
+    <Content Include="Content\Icons\Icon4.ico" />
+    <Content Include="Content\Icons\success.png" />
+    <Content Include="Content\Icons\Support.ico" />
+    <Content Include="Content\Icons\sync.ico" />
+    <Content Include="Content\Icons\warning.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -215,7 +232,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\CreateAccount.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Login2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -232,6 +248,14 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201903081651360_InitialCreate.resx">
+      <DependentUpon>201903081651360_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903091906049_CreateDate.resx">
+      <DependentUpon>201903091906049_CreateDate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

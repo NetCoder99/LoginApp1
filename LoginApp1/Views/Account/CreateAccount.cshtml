@@ -11,7 +11,9 @@
         HttpMethod = "POST",
         OnBegin = "OnBegin",
         OnComplete = "OnComplete",
-        OnFailure = "OnFailure(xhr, status)" },
+        OnFailure = "OnFailure(xhr, status)",
+        OnSuccess = "OnSuccess"
+    },
     new { id = "myform" }))
 {
 
@@ -28,15 +30,16 @@
             <div class="col-xs-8">
                 <div>
                     @if (@ViewBag.backLink == "ManageAccounts")
-                    {
-                        @Html.ActionLink("Back to Manage Accounts", "ManageAccounts")
-                    }
+                    { @Html.ActionLink("Back to Manage Accounts", "ManageAccounts") }
                     else
-                    {
-                        @Html.ActionLink("Back to login page", "Login")
-                    }
-
+                    { @Html.ActionLink("Back to login page", "Login") }
+                    <div id="div_message" class="float_right lcl_hidden">
+                        <img id="img_success" class="lcl_hidden" src="~/Content/Icons/success.png" style="height:18px;" />
+                        <img id="img_warning" class="lcl_hidden" src="~/Content/Icons/warning.png" style="height:18px;" />
+                        <span id="lbl_message">Message</span>
+                    </div>
                 </div>
+
                 <hr class="margin_bottom_none" />
                 <strong>Required Fields: Need this for access to the web site.</strong>
                 <hr class="margin_top_none" />
@@ -138,8 +141,11 @@
             }
 
             function OnComplete() {
+            }
+
+            function OnSuccess() {
                 DisableInputs(false);
-                $("#btn_submit").text("Create Account");
+                ShowMessage("Update complete.", false);
             }
 
             function OnFailure(xhr, status) {
@@ -148,6 +154,23 @@
                 $(".email_error").text(xhr.responseJSON.param2);
                 $("#Email").removeClass("lgreen");
                 $("#Email").addClass("lred");
+                ShowMessage("Update failed.", true);
+            }
+
+            function ShowMessage(message, error) {
+                if (error) {
+                    $("#img_success").hide();
+                    $("#img_warning").show();
+                }
+                else {
+                    $("#img_success").show();
+                    $("#img_warning").hide();
+                }
+                $("#lbl_message").text(message);
+                $("#div_message").show();
+                setTimeout(function () {
+                    $("#div_message").hide();
+                }, 5000);
             }
 
             function DisableInputs(flag) {

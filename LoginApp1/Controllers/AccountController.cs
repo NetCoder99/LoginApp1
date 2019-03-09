@@ -1,11 +1,8 @@
-﻿using LoginApp1.Classes.OWIN;
-using LoginApp1.DataConnections;
+﻿using LoginApp1.Classes.Account;
 using LoginApp1.Models.Account;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-//using Microsoft.AspNet.Identity.Owin;
-//using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,43 +20,60 @@ namespace LoginApp1.Controllers
         public ActionResult Login()
         {
             LoginCreds model = new LoginCreds();
+            model.UserName = "Petey_Cruiser2@nowhere.com";
+
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Login(LoginCreds login)
         {
-
+            dynamic jsonMessage = null;
             if (ModelState.IsValid)
             {
-                var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
-                var authManager = HttpContext.GetOwinContext().Authentication;
 
-                AppUser user = userManager.Find(login.UserName, login.PassWord);
-                if (user == null)
+                using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
                 {
-                    dynamic errorMessage = new { param1 = "UserName", param2 = "User Name not found." };
-                    HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                    return Json(errorMessage, JsonRequestBehavior.AllowGet);
-                }
+                    var authManager = HttpContext.GetOwinContext().Authentication;
+                    AppUser user = userManager.FindByEmail(login.UserName);
 
-                if (user != null)
-                {
+                    if (user == null)
+                    {
+                        jsonMessage = new { param1 = "UserName", param2 = "User Name not found." };
+                        HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                    }
+                    if (!userManager.CheckPassword(user, login.PassWord))
+                    {
+                        jsonMessage = new { param1 = "Password", param2 = "Invalid password." };
+                        HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
+                        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                    }
+
                     var ident = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                    //use the instance that has been created. 
-                    authManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
+                    authManager.SignIn(new AuthenticationProperties { IsPersistent = true }, ident);
 
-                    dynamic successMessage = new { url = Url.Action("Index", "Home") };
+                    jsonMessage = new { url = Url.Action("Index", "Home") };
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                    return Json(successMessage, JsonRequestBehavior.AllowGet);
-
-                    //return Redirect(login.ReturnUrl ?? Url.Action("Index", "Home"));
+                    return Json(jsonMessage, JsonRequestBehavior.AllowGet);
                 }
             }
-            ModelState.AddModelError("", "Invalid username or password");
-            return View(login);
+            else
+            {
+                jsonMessage = new { param1 = "ModelState", param2 = "ModelState was not valid." };
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
+                return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+            }
         }
 
+        // -------------------------------------------------------------------------------
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            var AuthenticationManager = HttpContext.GetOwinContext().Authentication;
+            AuthenticationManager.SignOut();
+            return View("Login");
+        }
 
         // -------------------------------------------------------------------------------
         [HttpGet]
@@ -79,26 +93,24 @@ namespace LoginApp1.Controllers
         [HttpPost]
         public ActionResult CreateAccount(AppUser model)
         {
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(200);
             ViewBag.backLink = "Login";
             if (ModelState.IsValid)
             {
-                using (UserAccountDB userAccountDB = new UserAccountDB())
+                model.UserName = model.Email;
+                model.PasswordHash = HashFunctions.HashPassword(model.Password);
+
+                var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+                var authManager = HttpContext.GetOwinContext().Authentication;
+                var ident = userManager.Create(model);
+                if (ident.Errors.Count() > 0)
                 {
-                    userAccountDB.Configuration.ValidateOnSaveEnabled = false;
-                    if (userAccountDB.Users.Where(w => w.Email == model.Email).Count() > 0)
+                    if (((string[])ident.Errors)[0].Contains("is already taken"))
                     {
-                        dynamic errorMessage = new { param1 = "UserName", param2 = "Email already exists." };
+                        dynamic errorMessage = new { param1 = "UserName", param2 = "Account already exists." };
                         HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
                         return Json(errorMessage, JsonRequestBehavior.AllowGet);
                     }
-
-
-                    model.UserName = model.Email;
-                    model.PasswordHash = HashFunctions.HashPassword(model.Password);
-                    userAccountDB.Users.Add(model);
-                    userAccountDB.SaveChanges();
-                    return View(model);
                 }
             }
             return View(model);

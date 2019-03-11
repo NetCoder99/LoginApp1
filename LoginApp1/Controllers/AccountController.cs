@@ -1,4 +1,5 @@
 ﻿using LoginApp1.Classes.Account;
+using LoginApp1.DataConnections;
 using LoginApp1.Models.Account;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -17,6 +18,7 @@ namespace LoginApp1.Controllers
     {
         // -------------------------------------------------------------------------------
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Login()
         {
             LoginCreds model = new LoginCreds();
@@ -26,8 +28,11 @@ namespace LoginApp1.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Login(LoginCreds login)
         {
+
+
             dynamic jsonMessage = null;
             if (ModelState.IsValid)
             {
@@ -51,7 +56,15 @@ namespace LoginApp1.Controllers
                     }
 
                     var ident = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                    authManager.SignIn(new AuthenticationProperties { IsPersistent = true }, ident);
+                    authManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
+
+                    string returnUrl = HttpUtility.ParseQueryString(Request.UrlReferrer.Query)["ReturnUrl"].ToString();
+                    if (returnUrl != null)
+                    {
+                        jsonMessage = new { url = returnUrl };
+                        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                    }
 
                     jsonMessage = new { url = Url.Action("Index", "Home") };
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -72,6 +85,7 @@ namespace LoginApp1.Controllers
         {
             var AuthenticationManager = HttpContext.GetOwinContext().Authentication;
             AuthenticationManager.SignOut();
+            System.Web.HttpContext.Current.User = null;
             return View("Login");
         }
 
@@ -114,6 +128,20 @@ namespace LoginApp1.Controllers
                 }
             }
             return View(model);
+        }
+
+        // -------------------------------------------------------------------------------
+        [HttpGet]
+        [Authorize]
+        public ActionResult ManageAccounts(string deleteMsg = null)
+        {
+            using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
+            {
+                List<AppUser> model = userManager.Users.ToList();
+                if (deleteMsg != null)
+                { ViewBag.deleteMsg = deleteMsg; }
+                return View(model);
+            }
         }
 
 

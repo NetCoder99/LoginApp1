@@ -1,0 +1,19 @@
+﻿@model  LoginApp1.Models.Errors
+
+@{
+    ViewBag.Title = "Errors";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 center-block">
+            <h3 class="text-danger">An Error was detected</h3>
+            <hr />
+            <img src="~/Content/Icons/warning.png" height="18" style="display:inline" />
+            <p class="text-danger" style="display:inline">@Model.error_message</p>
+            <hr />
+        </div>
+    </div>
+</div>

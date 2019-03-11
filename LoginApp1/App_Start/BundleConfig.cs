@@ -20,7 +20,9 @@ namespace LoginApp1
                         "~/Scripts/jquery.validate*",
                         "~/Scripts/jquery.validate.unobtrusive.js"));
 
-
+            bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+                        "~/Scripts/DataTables/jquery.dataTables.min.js"
+            ));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
@@ -28,12 +30,16 @@ namespace LoginApp1
                 "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootbox.all.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/themes/base/jquery-ui.min.css",
-                      "~/Content/site.css"));
+                      "~/Content/DataTables/css/dataTables.bootstrap.min.css",
+                      "~/Content/DataTables/css/jquery.dataTables.min.css",
+                                            "~/Content/site.css"
+));
         }
     }
 }

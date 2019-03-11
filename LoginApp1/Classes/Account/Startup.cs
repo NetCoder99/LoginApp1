@@ -17,7 +17,6 @@ namespace LoginApp1.Classes.Account
             app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
 
             RoleStore<AppRole> role_store = new RoleStore<AppRole>(new UserAccountDB());
-
             app.CreatePerOwinContext<RoleManager<AppRole>>((options, context) =>
                 new RoleManager<AppRole>(
                 role_store));
@@ -27,8 +26,6 @@ namespace LoginApp1.Classes.Account
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
             });
-
-            //ConfigureAuth(app); // <-- this
         }
 
     }

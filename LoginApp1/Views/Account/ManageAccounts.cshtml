@@ -3,78 +3,91 @@
     ViewBag.Title = "ManageAccounts";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Manage User Accounts</h2>
-
-<div>
-    @Html.ActionLink("Create New", "CreateAccount", "Account", new { backLink = "ManageAccounts" }, null)
-    <div id="message_div" style="display:inline;float:right;display:none;">
-        <img src="~/Content/Icons/success.png" style="height:18px;" />
-        <span id="message"></span>
-    </div>
-</div>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DisplayName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrefEmail)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrefText)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+@using (Ajax.BeginForm("CreateAccount", "Account", null,
+    new AjaxOptions
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DisplayName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrefEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrefText)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "EditAccount", new { id = item.Email }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Email},
-                                              new { @class = "delete_click", onclick = "return ConfirmDelete('" + item.Email + "','" + item.Email + "');  " })
+        HttpMethod = "POST",
+        OnBegin = "OnBegin",
+        OnFailure = "OnFailure(xhr, status)",
+        OnSuccess = "OnSuccess"
+    },
+    new { id = "myform" }))
+{
+    <h2>Manage User Accounts</h2>
 
-            </td>
-        </tr>
-    }
+    <div>
+        @Html.ActionLink("Create New", "CreateAccount", "Account", new { backLink = "ManageAccounts" }, null)
+        <div id="message_div" style="display:inline;float:right;display:none;">
+            <img src="~/Content/Icons/success.png" style="height:18px;" />
+            <span id="message"></span>
+        </div>
+    </div>
 
-</table>
+    <table class="table table-bordered table-condensed" id="tbl_accounts">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Password)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DisplayName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrefEmail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrefText)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
 
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DisplayName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrefEmail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrefText)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "CreateAccount", new { id = item.UserId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Email},
+                                                      new { @class = "delete_click", onclick = "return ConfirmDelete('" + item.UserId + "');  " })
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
 
 @section scripts{
     <script>
@@ -95,9 +108,10 @@
                 $("#message_div").hide();
             }
 
+            $("#tbl_accounts").dataTable({ searching: false, info: false, lengthChange: false, });
         });
 
-        function ConfirmDelete(name, id) {
+        function ConfirmDelete(userId) {
             bootbox.confirm({
                 message: "Delete this user: " + name + "?",
                 buttons: {
@@ -109,8 +123,9 @@
                     }
                 },
                 callback: function (result) {
+                    DisableInputs(true);
                     if (result) {
-                        var url = "DeleteAccount/" + id;
+                        var url = "ManageAccounts/" + userId;
                         console.log("redirect to url:" + url);
                         window.location.href = url;
                     }
@@ -119,6 +134,54 @@
             });
             return false;
         };
+
+        function AjaxPost() {
+            console.log("AjaxPost");
+            $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("ManageAccounts", "Account")',
+                    contentType: "application/json; charset=utf-8",
+                    data: { 'para1': val1, 'para2': val2 },
+                    dataType: "json",
+                    success: function (cities) {
+                        console.log("cancel delete");
+                    }
+                });
+        }
+
+        function OnBegin() {
+            console.log("OnBegin");
+            DisableInputs(true);
+        }
+
+        function OnComplete() {
+        }
+
+        function OnSuccess() {
+            console.log("OnSuccess");
+            DisableInputs(false);
+            ShowMessage("Update complete.", false);
+        }
+
+        function OnFailure(xhr, status) {
+            console.log("OnFailure");
+            DisableInputs(false);
+        }
+
+        function DisableInputs(flag) {
+            if (flag) {
+                $(".small_inp_box").prop("disabled", true);
+                $("input:password").prop("disabled", true);
+                $("#btn_submit").prop("disabled", true);
+                $("#btn_submit").text("Processing", true);
+            }
+            else {
+                $(".small_inp_box").prop("disabled", false);
+                $("input:password").prop("disabled", false);
+                $("#btn_submit").prop("disabled", false);
+                $("#btn_submit").text("Create Account");
+            }
+        }
 
     </script>
 }

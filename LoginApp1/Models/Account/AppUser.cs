@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using Microsoft.AspNet.Identity;
 
 namespace LoginApp1.Models.Account
 {
@@ -16,6 +16,11 @@ namespace LoginApp1.Models.Account
         {
             CreateDate = DateTime.Now;
         }
+
+        [Display(Name = "User ID")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int UserId { get; set; }
+
         [Required(ErrorMessage = "Email address is required")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         [Index(IsUnique = true)]
@@ -59,5 +64,7 @@ namespace LoginApp1.Models.Account
 
         [Display(Name = "Create Date")]
         public DateTime CreateDate { get; set; }
+
+        
     }
 }

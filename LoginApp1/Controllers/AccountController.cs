@@ -31,12 +31,9 @@ namespace LoginApp1.Controllers
         [AllowAnonymous]
         public ActionResult Login(LoginCreds login)
         {
-
-
             dynamic jsonMessage = null;
             if (ModelState.IsValid)
             {
-
                 using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
                 {
                     var authManager = HttpContext.GetOwinContext().Authentication;
@@ -58,10 +55,10 @@ namespace LoginApp1.Controllers
                     var ident = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
                     authManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
 
-                    string returnUrl = HttpUtility.ParseQueryString(Request.UrlReferrer.Query)["ReturnUrl"].ToString();
-                    if (returnUrl != null)
+                    var urls = HttpUtility.ParseQueryString(Request.UrlReferrer.Query).GetValues("ReturnUrl");
+                    if (urls != null)
                     {
-                        jsonMessage = new { url = returnUrl };
+                        jsonMessage = new { url = urls[0].ToString() };
                         HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                         return Json(jsonMessage, JsonRequestBehavior.AllowGet);
                     }
@@ -89,10 +86,37 @@ namespace LoginApp1.Controllers
             return View("Login");
         }
 
-        // -------------------------------------------------------------------------------
+        //// -------------------------------------------------------------------------------
+        //[HttpGet]
+        //public ActionResult CreateAccount()
+        //{
+        //    AppUser tmp_user = new AppUser();
+        //    tmp_user.Email = "Petey_Cruiser@nowhere.com";
+        //    tmp_user.Password = "CruiserPAss3";
+        //    tmp_user.PasswordConfirm = "CruiserPAss3";
+        //    tmp_user.FirstName = "Petey";
+        //    tmp_user.LastName = "Cruiser";
+        //    tmp_user.PhoneNumber = "333.555.2465";
+
+        //    ViewBag.backLink = "Login";
+        //    return View(tmp_user);
+        //}
+
         [HttpGet]
-        public ActionResult CreateAccount()
+        public ActionResult CreateAccount(int id = -1)
         {
+            int userId = int.Parse(id.ToString());
+            dynamic jsonMessage = null;
+            List<AppUser> appUsers = null;
+            using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
+            { appUsers = userManager.Users.Where(w => w.UserId == userId).ToList(); }
+
+            if (appUsers.Count() == 1)
+            {
+                ViewBag.backLink = "ManageAccounts";
+                return View(appUsers[0]);
+            }
+            
             AppUser tmp_user = new AppUser();
             tmp_user.Email = "Petey_Cruiser@nowhere.com";
             tmp_user.Password = "CruiserPAss3";
@@ -104,10 +128,11 @@ namespace LoginApp1.Controllers
             ViewBag.backLink = "Login";
             return View(tmp_user);
         }
+
         [HttpPost]
         public ActionResult CreateAccount(AppUser model)
         {
-            System.Threading.Thread.Sleep(200);
+            System.Threading.Thread.Sleep(100);
             ViewBag.backLink = "Login";
             if (ModelState.IsValid)
             {
@@ -132,18 +157,72 @@ namespace LoginApp1.Controllers
 
         // -------------------------------------------------------------------------------
         [HttpGet]
-        [Authorize]
-        public ActionResult ManageAccounts(string deleteMsg = null)
+        public ActionResult ManageAccounts()
         {
             using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
             {
                 List<AppUser> model = userManager.Users.ToList();
-                if (deleteMsg != null)
-                { ViewBag.deleteMsg = deleteMsg; }
                 return View(model);
             }
         }
 
 
+        // -------------------------------------------------------------------------------
+        [HttpGet]
+        public ActionResult DeleteAccount(string Id)
+        {
+            System.Threading.Thread.Sleep(100);
+            dynamic jsonMessage = null;
+            if (ModelState.IsValid)
+            {
+                using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
+                {
+                    int userId = int.Parse(Id);
+                    List<AppUser> appUsers = userManager.Users.Where(w => w.UserId == userId).ToList();
+                    if (appUsers.Count() == 1)
+                    {
+                        userManager.Delete(appUsers[0]);
+                        jsonMessage = new { param1 = "UserName", param2 = "Account was deleted." };
+                        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                    }
+
+                }
+                    //model.UserName = model.Email;
+                    //model.PasswordHash = HashFunctions.HashPassword(model.Password);
+
+                    //var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+                    //var authManager = HttpContext.GetOwinContext().Authentication;
+                    //var ident = userManager.Create(model);
+                    //if (ident.Errors.Count() > 0)
+                    //{
+                    //    if (((string[])ident.Errors)[0].Contains("is already taken"))
+                    //    {
+                    //        dynamic errorMessage = new { param1 = "UserName", param2 = "Account already exists." };
+                    //        HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
+                    //        return Json(errorMessage, JsonRequestBehavior.AllowGet);
+                    //    }
+                    //}
+                string lcldeleteMsg = "Account was deleted: ";// + user_dtls.Email;
+                ViewBag.deleteMsg = "Account was deleted";
+                return RedirectToAction("ManageAccounts", new { deleteMsg = lcldeleteMsg });
+
+            }
+            return RedirectToAction("ManageAccounts", new { errorMessage = "Invalid Model state" });
+            //using (UserAccountDB userAccountDB = new UserAccountDB())
+            //{
+            //    userAccountDB.Configuration.ValidateOnSaveEnabled = false;
+            //    UserAccount user_dtls = userAccountDB.UserDetails.Where(w => w.UserDetailId == ID).First();
+            //    UserAccountDeleted user_dltd = new UserAccountDeleted(user_dtls);
+            //    user_dltd.DeleteDate = DateTime.Now;
+            //    userAccountDB.UserDeletes.Add(user_dltd);
+            //    userAccountDB.SaveChanges();
+            //    userAccountDB.UserDetails.Remove(user_dtls);
+            //    userAccountDB.SaveChanges();
+            //    string lcldeleteMsg = "Account was deleted: " + user_dtls.Email;
+            //    ViewBag.deleteMsg = "Account was deleted";
+            //    return RedirectToAction("ManageAccounts", new { deleteMsg = lcldeleteMsg });
+            //}
+        }
     }
 }

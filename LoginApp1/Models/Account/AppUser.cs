@@ -6,10 +6,12 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNet.Identity;
+using FluentValidation;
 
 namespace LoginApp1.Models.Account
 {
     [Table("AppUsers", Schema = "LoginApp1")]
+    [FluentValidation.Attributes.Validator(typeof(AppUserValid))]
     public class AppUser : IdentityUser
     {
         public AppUser()
@@ -21,34 +23,26 @@ namespace LoginApp1.Models.Account
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
 
-        [Required(ErrorMessage = "Email address is required")]
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        [Display(Name = "Email Address")]
         [Index(IsUnique = true)]
         [StringLength(50)]
-        [Display(Name = "Email Address")]
         public override string Email { get; set; }
 
         [Display(Name = "Password")]
-        [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Password is required")]
         [StringLength(50)]
         [NotMapped]
-        [Compare(nameof(PasswordConfirm), ErrorMessage = "Passwords don't match.")]
         public string Password { get; set; }
 
         [Display(Name = "Password Confirmation")]
-        [Required(ErrorMessage = "Password confirmation is required")]
         [StringLength(50)]
         [NotMapped]
         public string PasswordConfirm { get; set; }
 
         [Display(Name = "First Name")]
-        [Required(ErrorMessage = "First name is required")]
         [StringLength(50)]
         public string FirstName { get; set; }
 
         [Display(Name = "Last Name")]
-        [Required(ErrorMessage = "Last name is required")]
         [StringLength(50)]
         public string LastName { get; set; }
 

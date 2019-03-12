@@ -54,14 +54,14 @@
                 <div class="row">
                     <div class="form-group col-xs-6 margin_bottom_small">
                         @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
-                        @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
+                        @Html.PasswordFor(model => model.Password, new { value = "@Model.Password", htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
                         @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger static_error password_error" })
                         <span class="pssword_match_error text-danger static_error"></span>
                     </div>
 
                     <div class="form-group col-xs-6 margin_bottom_small">
                         @Html.LabelFor(model => model.PasswordConfirm, htmlAttributes: new { @class = "control-label " })
-                        @Html.PasswordFor(model => model.PasswordConfirm, new { htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
+                        @Html.PasswordFor(model => model.PasswordConfirm, new { value = "@Model.Password", htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
                         @Html.ValidationMessageFor(model => model.PasswordConfirm, "", new { @class = "text-danger static_error password_confirm_error" })
                     </div>
                 </div>
@@ -116,7 +116,6 @@
                 </div>
             </div>
 
-
             <div class="form-group col-xs-3 text-center "></div>
             <div class="form-group col-xs-4 text-center ">
                 <button id="btn_submit" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Create Account</button>
@@ -145,7 +144,7 @@
 
             function OnSuccess() {
                 DisableInputs(false);
-                ShowMessage("Update complete.", false);
+                ShowMessage("Account was created.", false);
             }
 
             function OnFailure(xhr, status) {

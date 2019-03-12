@@ -12,8 +12,11 @@ namespace LoginApp1.Classes.Account
 {
     public class AppUserManager : UserManager<AppUser>
     {
+        private AppUser model;
+
         public AppUserManager(IUserStore<AppUser> store) : base(store)
         {
+
         }
 
         public static AppUserManager Create(IdentityFactoryOptions<AppUserManager> options, IOwinContext context)

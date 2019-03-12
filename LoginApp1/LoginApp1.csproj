@@ -52,6 +52,15 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.8.1.3\lib\net45\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.Mvc5.8.1.3\lib\net45\FluentValidation.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.ValidatorAttribute, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.ValidatorAttribute.8.1.3\lib\net45\FluentValidation.ValidatorAttribute.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -81,11 +90,20 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Primitives, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Primitives.4.3.0\lib\net45\System.ComponentModel.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0f07ec44de6ac832, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.Core.1.0.6.10\lib\net461\System.Linq.Dynamic.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -163,6 +181,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Classes\Account\AppUserManager.cs" />
+    <Compile Include="Models\GetModelErrors.cs" />
     <Compile Include="Classes\Account\HashFunctions.cs" />
     <Compile Include="Classes\Account\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -192,12 +211,22 @@
     <Compile Include="Migrations\201903111909478_userid3.Designer.cs">
       <DependentUpon>201903111909478_userid3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903112048379_userid4.cs" />
+    <Compile Include="Migrations\201903112048379_userid4.Designer.cs">
+      <DependentUpon>201903112048379_userid4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903112052390_userid5.cs" />
+    <Compile Include="Migrations\201903112052390_userid5.Designer.cs">
+      <DependentUpon>201903112052390_userid5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account\AppRole.cs" />
     <Compile Include="Models\Account\AppUser.cs" />
+    <Compile Include="Models\Account\AppUserValid.cs" />
     <Compile Include="Models\Account\LoginCreds.cs" />
-    <Compile Include="Models\BaseViewModel.cs" />
+    <Compile Include="Models\Account\LoginCredsValid.cs" />
     <Compile Include="Models\Errors.cs" />
+    <Compile Include="Models\GetModelUpdates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -491,6 +520,8 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\ManageAccounts.cshtml" />
     <Content Include="Views\Error\Errors.cshtml" />
+    <Content Include="Views\Account\EditAccount.cshtml" />
+    <Content Include="Views\Account\AccountDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -523,6 +554,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903111909478_userid3.resx">
       <DependentUpon>201903111909478_userid3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903112048379_userid4.resx">
+      <DependentUpon>201903112048379_userid4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903112052390_userid5.resx">
+      <DependentUpon>201903112052390_userid5.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

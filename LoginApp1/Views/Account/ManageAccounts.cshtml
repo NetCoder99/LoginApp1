@@ -76,8 +76,8 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.PrefText)
                     </td>
-                    <td>
-                        @Html.ActionLink("Edit", "CreateAccount", new { id = item.UserId }) |
+                    <td>    
+                        @Html.ActionLink("Edit", "EditAccount", new { UserId = item.UserId }) |
                         @Html.ActionLink("Delete", "Delete", new { id = item.Email},
                                                       new { @class = "delete_click", onclick = "return ConfirmDelete('" + item.UserId + "');  " })
 

@@ -1,4 +1,5 @@
-﻿using LoginApp1.Controllers;
+﻿using FluentValidation.Mvc;
+using LoginApp1.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace LoginApp1
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            FluentValidationModelValidatorProvider.Configure();
         }
 
         protected void Application_Error()

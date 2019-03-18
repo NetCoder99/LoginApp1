@@ -33,7 +33,7 @@
                     <div class="form-group col-xs-12">
                         <label for="exampleInputEmail1">Password</label>
                         @Html.PasswordFor(m => m.PassWord, new { @class = "form-control small_inp_box lgreen" })
-                        @Html.ValidationMessageFor(m => m.PassWord, "", new { @class = "text-danger static_error", @id= "PassWordError" })
+                        @Html.ValidationMessageFor(m => m.PassWord, "", new { @class = "text-danger static_error", @id = "PassWordError" })
                     </div>
                     <div class="form-group col-xs-6 text-center ">
                         <button id="btn_submit" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
@@ -42,7 +42,7 @@
                         <p><span>Don't have account?</span> @Html.ActionLink("Sign up here", "CreateAccount", "Account")</p>
                     </div>
                     <div class="form-group col-xs-12">
-                        <p>By signing up you accept our <a href="#">Terms Of Use</a></p>
+                        <p><span>Forgot your password?</span> @Html.ActionLink("Reset password", "ResetPassword", "Account", new { userName = Model.UserName} , null)</p>
                     </div>
                 </div>
             </div>

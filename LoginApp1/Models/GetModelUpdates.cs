@@ -71,6 +71,9 @@ namespace LoginApp1.Models
             return rtn_list;
         }
 
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        // update the return list, moved to function for reuse
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
         private static void UpdateRtnList(string prop_name, object f_obj, object d_obj, List<ModelUpdates> rtn_list)
         {
             ModelUpdates tmp_update = new ModelUpdates();

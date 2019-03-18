@@ -17,7 +17,7 @@ namespace LoginApp1.Controllers
 {
     public class AccountController : Controller
     {
-        // -------------------------------------------------------------------------------
+        // ===============================================================================
         [HttpGet]
         [AllowAnonymous]
         public ActionResult Login()
@@ -239,6 +239,87 @@ namespace LoginApp1.Controllers
             return RedirectToAction("ManageAccounts", new { errorMessage = "Invalid Model state" });
         }
 
+        // ===============================================================================
+        [HttpGet]
+        public ActionResult ResetPassword(string userName)
+        {
+            ViewBag.state = "Sending";
+            ResetPassword model = new ResetPassword();
+            model.Email = userName;
+            model.ProcessStatus = "sending";
+            return View(model);
+        }
+        // -------------------------------------------------------------------------------
+        [HttpPost]
+        public JsonResult ResetPassword(ResetPassword model)
+        {
+            System.Threading.Thread.Sleep(100);
+            dynamic jsonMessage;
+
+            if (model.ProcessStatus == "login")
+            {
+                string loginUrl = Url.Action("Login", "Account");
+                jsonMessage = new { param1 = "gotologin", param2 = loginUrl };
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+            }
+
+            if (String.IsNullOrEmpty(model.TempResetCode))
+            {
+                jsonMessage = new { param1 = "status", param2 = "waiting" };
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+            }
+
+            if (model.TempResetCode != "test reset")
+            {
+                jsonMessage = new { param1 = "status", param2 = "invalidcode" };
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
+                return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+            }
+
+            if (model.TempResetCode == "test reset")
+            {
+
+                if (String.IsNullOrEmpty(model.Password) && String.IsNullOrEmpty(model.Password))
+                {
+                    jsonMessage = new { param1 = "status", param2 = "validcode" };
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                    model.ProcessStatus = "validcode";
+                    return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                }
+                if (ModelState.IsValid)
+                {
+                    UpdatePassword(HttpContext, model);
+                    jsonMessage = new { param1 = "status", param2 = "passupdated" };
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                    model.ProcessStatus = "passupdated";
+                    return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    jsonMessage = new { param1 = "status", param2 = "invalidpass" };
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
+                    return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            jsonMessage = new { param1 = "state", param2 = "uknownstate" };
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
+            return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+        }
+
+
+        private static void UpdatePassword(HttpContextBase HttpContext, ResetPassword model)
+        {
+            using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
+            {
+                AppUser appUser = userManager.FindByEmail(model.Email);
+                userManager.PasswordHasher.HashPassword(model.Password);
+                appUser.PasswordHash = userManager.PasswordHasher.HashPassword(model.Password);
+                userManager.Update(appUser);
+            }
+        }
 
     }
 }

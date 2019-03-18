@@ -31,12 +31,24 @@ namespace LoginApp1
             httpContext.ClearError();
             HttpContext.Current.ClearError();
 
-            HttpContext.Current.Session.Add("gbl_exception", error);
-            var routeData = new RouteData();
-            routeData.Values["controller"] = "Error";
-            routeData.Values["action"] = "Index";
-            using (var controller = new ErrorController())
-            {  ((IController)controller).Execute(new RequestContext(new HttpContextWrapper(httpContext), routeData));  }
+            Response.TrySkipIisCustomErrors = true;
+            Response.Redirect(String.Format("~/Error/{0}/?message={1}", "GblError", "exception.Message"));
+
+
+            //Response.RedirectToRoute(
+            //                    new RouteValueDictionary
+            //                    {
+            //            {"Controller", "Error"},
+            //            {"Action", "GblError"}
+            //                    });
+
+
+            //HttpContext.Current.Session.Add("gbl_exception", error);
+            //var routeData = new RouteData();
+            //routeData.Values["controller"] = "Error";
+            //routeData.Values["action"] = "GblError";
+            //using (var controller = new ErrorController())
+            //{  ((IController)controller).Execute(new RequestContext(new HttpContextWrapper(httpContext), routeData));  }
 
         }
     }

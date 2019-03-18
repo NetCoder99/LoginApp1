@@ -94,6 +94,7 @@
         $(document).ready(function () {
             console.log("ready to rock and roll....");
             var deleteMsg = '@(ViewBag.deleteMsg)';
+
             console.log("deleteMsg:" + deleteMsg);
             if (deleteMsg != "") {
                 console.log("deleteMsg:" + deleteMsg);
@@ -125,9 +126,7 @@
                 callback: function (result) {
                     DisableInputs(true);
                     if (result) {
-                        var url = "ManageAccounts/" + userId;
-                        console.log("redirect to url:" + url);
-                        window.location.href = url;
+                        AjaxPostDelete(userId);
                     }
                     else { console.log("cancel delete"); }
                 }
@@ -135,18 +134,18 @@
             return false;
         };
 
-        function AjaxPost() {
-            console.log("AjaxPost");
+        function AjaxPostDelete(user_id) {
+            console.log("AjaxPostDelete:" + user_id);
             $.ajax({
-                    type: "GET",
-                    url: '@Url.Action("ManageAccounts", "Account")',
-                    contentType: "application/json; charset=utf-8",
-                    data: { 'para1': val1, 'para2': val2 },
-                    dataType: "json",
-                    success: function (cities) {
+                type: "GET",
+                url: '@Url.Action("DeleteAccount", "Account")',
+                contentType: "application/json; charset=utf-8",
+                data: { 'Id': user_id},
+                dataType: "json",
+                success: function (cities) {
                         console.log("cancel delete");
-                    }
-                });
+                }
+            });
         }
 
         function OnBegin() {

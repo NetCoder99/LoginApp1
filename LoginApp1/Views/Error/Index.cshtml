@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Errors</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 center-block">
+            <h3 class="text-danger">An Error was detected</h3>
+            <hr />
+            <img src="~/Content/Icons/warning.png" height="18" style="display:inline" />
+            <p class="text-danger" style="display:inline">@Model.error_message</p>
+            <hr />
+        </div>
+    </div>
+</div>
+

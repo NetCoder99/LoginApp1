@@ -22,6 +22,17 @@ namespace LoginApp1.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
+            if (Request.UrlReferrer == null)
+            { ViewBag.Header1 = "Please Login to continue."; }
+            else
+            {
+                var urls = HttpUtility.ParseQueryString(Request.UrlReferrer.Query).GetValues("ReturnUrl");
+                if (urls != null)
+                { ViewBag.Header1 = "Please Login to access that page."; }
+                else
+                { ViewBag.Header1 = "Please Login to continue."; }
+            }
+
             LoginCreds model = new LoginCreds();
             model.UserName = "Petey_Cruiser4@nowhere.com";
             return View(model);
@@ -31,6 +42,7 @@ namespace LoginApp1.Controllers
         [AllowAnonymous]
         public ActionResult Login(LoginCreds login)
         {
+            ViewBag.Header1 = "Please Login to continue.";
             dynamic jsonMessage = null;
             if (ModelState.IsValid)
             {
@@ -50,6 +62,10 @@ namespace LoginApp1.Controllers
                         HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
                         return Json(jsonMessage, JsonRequestBehavior.AllowGet);
                     }
+
+                    if (user.SecurityStamp == null)
+                    { userManager.UpdateSecurityStamp(user.Id); }
+
                     var ident = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
                     authManager.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
                     var urls = HttpUtility.ParseQueryString(Request.UrlReferrer.Query).GetValues("ReturnUrl");
@@ -79,7 +95,7 @@ namespace LoginApp1.Controllers
             var AuthenticationManager = HttpContext.GetOwinContext().Authentication;
             AuthenticationManager.SignOut();
             System.Web.HttpContext.Current.User = null;
-            return View("Login");
+            return RedirectToAction("Login");
         }
 
         // -------------------------------------------------------------------------------
@@ -98,7 +114,6 @@ namespace LoginApp1.Controllers
         }
 
         [HttpPost]
-        [HttpGet]
         public ActionResult CreateAccount(AppUser model)
         {
             ViewBag.backLink = "Login";
@@ -150,7 +165,14 @@ namespace LoginApp1.Controllers
         [HttpPost]
         public ActionResult EditAccount(AppUser model)
         {
-            List<string> include_fields = new List<string>() { "FirstName", "LastName", "DisplayName", "PrefEmail", "PrefText", "PhoneNumber" };
+            List<string> include_fields = new List<string>() { "FirstName",
+                                                               "LastName",
+                                                               "DisplayName",
+                                                               "PrefEmail",
+                                                               "PrefText",
+                                                               "PhoneNumber",
+                                                               "LockoutEndDateUtc" };
+
             model.UserName = model.Email;
             var validator = new AppUserValid();
             var errors = validator.Validate(model);
@@ -159,7 +181,8 @@ namespace LoginApp1.Controllers
                 using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
                 {
                     AppUser appUser = userManager.FindByEmail(model.Email);
-                    List<ModelUpdates> upd_list = GetModelUpdates.GetUpdates(model, appUser, include_fields);
+                    model.LockoutEndDateUtc = DateTime.Now;
+                    List<ModelUpdates> upd_list = GetModelUpdates.GetUpdates(model, appUser, null, include_fields);
                     userManager.Update(appUser);
                     return View(appUser);
                 }
@@ -186,6 +209,9 @@ namespace LoginApp1.Controllers
         [HttpGet]
         public ActionResult DeleteAccount(string Id)
         {
+            if (Id == null)
+            { return RedirectToAction("ManageAccounts", new { errorMessage = "User id was null." }); }
+
             System.Threading.Thread.Sleep(100);
             dynamic jsonMessage = null;
             if (ModelState.IsValid)
@@ -199,45 +225,20 @@ namespace LoginApp1.Controllers
                         userManager.Delete(appUsers[0]);
                         jsonMessage = new { param1 = "UserName", param2 = "Account was deleted." };
                         HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                        ViewBag.deleteMsg = "Account was deleted";
+                        return RedirectToAction("ManageAccounts", new { deleteMsg = jsonMessage });
+                        //return Json(jsonMessage, JsonRequestBehavior.AllowGet);
                     }
 
                 }
-                    //model.UserName = model.Email;
-                    //model.PasswordHash = HashFunctions.HashPassword(model.Password);
-
-                    //var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
-                    //var authManager = HttpContext.GetOwinContext().Authentication;
-                    //var ident = userManager.Create(model);
-                    //if (ident.Errors.Count() > 0)
-                    //{
-                    //    if (((string[])ident.Errors)[0].Contains("is already taken"))
-                    //    {
-                    //        dynamic errorMessage = new { param1 = "UserName", param2 = "Account already exists." };
-                    //        HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
-                    //        return Json(errorMessage, JsonRequestBehavior.AllowGet);
-                    //    }
-                    //}
                 string lcldeleteMsg = "Account was deleted: ";// + user_dtls.Email;
                 ViewBag.deleteMsg = "Account was deleted";
                 return RedirectToAction("ManageAccounts", new { deleteMsg = lcldeleteMsg });
 
             }
             return RedirectToAction("ManageAccounts", new { errorMessage = "Invalid Model state" });
-            //using (UserAccountDB userAccountDB = new UserAccountDB())
-            //{
-            //    userAccountDB.Configuration.ValidateOnSaveEnabled = false;
-            //    UserAccount user_dtls = userAccountDB.UserDetails.Where(w => w.UserDetailId == ID).First();
-            //    UserAccountDeleted user_dltd = new UserAccountDeleted(user_dtls);
-            //    user_dltd.DeleteDate = DateTime.Now;
-            //    userAccountDB.UserDeletes.Add(user_dltd);
-            //    userAccountDB.SaveChanges();
-            //    userAccountDB.UserDetails.Remove(user_dtls);
-            //    userAccountDB.SaveChanges();
-            //    string lcldeleteMsg = "Account was deleted: " + user_dtls.Email;
-            //    ViewBag.deleteMsg = "Account was deleted";
-            //    return RedirectToAction("ManageAccounts", new { deleteMsg = lcldeleteMsg });
-            //}
         }
+
+
     }
 }

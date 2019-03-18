@@ -1,101 +1,107 @@
 ﻿@model LoginApp1.Models.Account.AppUser 
 
 <div class="row">
-<div class="col-xs-2"></div>
-<div class="col-xs-8">
-    <div>
-        @if (@ViewBag.backLink == "ManageAccounts")
-        {@Html.ActionLink("Back to Manage Accounts", "ManageAccounts") }
-    else
-    { @Html.ActionLink("Back to login page", "Login")}
-        <div id="div_message" class="float_right lcl_hidden">
-            <img id="img_success" class="lcl_hidden" src="~/Content/Icons/success.png" style="height:18px;" />
-            <img id="img_warning" class="lcl_hidden" src="~/Content/Icons/warning.png" style="height:18px;" />
-            <span id="lbl_message">Message</span>
-        </div>
-    </div>
-
-    <hr class="margin_bottom_none" />
-    <strong>Required Fields: Need this for access to the web site.</strong>
-    <hr class="margin_top_none" />
-    <div class="row margin_bottom_small">
-        <div class="form-group col-xs-6 margin_bottom_small">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
-            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger static_error email_error" })
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="form-group col-xs-6 margin_bottom_small">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
-            @Html.PasswordFor(model => model.Password, new { value = "@Model.Password", htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
-            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger static_error password_error" })
-            <span class="pssword_match_error text-danger static_error"></span>
-        </div>
-
-        <div class="form-group col-xs-6 margin_bottom_small">
-            @Html.LabelFor(model => model.PasswordConfirm, htmlAttributes: new { @class = "control-label " })
-            @Html.PasswordFor(model => model.PasswordConfirm, new { value = "@Model.Password", htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
-            @Html.ValidationMessageFor(model => model.PasswordConfirm, "", new { @class = "text-danger static_error password_confirm_error" })
-        </div>
-    </div>
-
-    <hr class="margin_bottom_none margin_top_none" />
-    <strong>Optional Fields: Personal Information</strong>
-    <hr class="margin_top_none" />
-
-    <div class="row">
-        <div class="form-group col-xs-6">
-            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
-            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger static_error" })
-        </div>
-
-        <div class="form-group col-xs-6">
-            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
-            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger static_error" })
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="form-group col-xs-6">
-            @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
-            @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger static_error" })
-        </div>
-
-        <div class="form-group col-xs-6">
-            @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label" })
-            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control small_inp_box phone_number" } })
-            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger static_error" })
-        </div>
-    </div>
-    <div class="row">
-
-        <div class="form-group col-xs-6">
-            <label class="control-label">Notification Types</label>
-            <div class="form-group " style="margin-top:5px;">
-                <div class="col-xs-6">
-                    @Html.CheckBoxFor(m => m.PrefEmail, new { @checked = "true", @class = "" })
-                    @Html.LabelFor(model => model.PrefEmail, htmlAttributes: new { @class = "control-label margin_left_vsmall" })
-                </div>
-                <div class="col-xs-6">
-                    @Html.CheckBoxFor(m => m.PrefText, new { @checked = "checked" })
-                    @Html.LabelFor(model => model.PrefText, htmlAttributes: new { @class = "control-label margin_left_vsmall" })
-                </div>
+    <div class="col-xs-2"></div>
+    <div class="col-xs-8">
+        <div>
+            @{
+                if (@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString() == "EditAccount")
+                { @Html.ActionLink("Back to Manage Accounts", "ManageAccounts")}
+                else
+                { @Html.ActionLink("Back to Login page", "Login")}
+            }
+            <div id="div_message" class="float_right lcl_hidden">
+                <img id="img_success" class="lcl_hidden" src="~/Content/Icons/success.png" style="height:18px;" />
+                <img id="img_warning" class="lcl_hidden" src="~/Content/Icons/warning.png" style="height:18px;" />
+                <span id="lbl_message">Message</span>
             </div>
         </div>
 
-    </div>
-</div>
+        <hr class="margin_bottom_none" />
+        <strong>Required Fields: Need this for access to the web site.</strong>
+        <hr class="margin_top_none" />
+        <div class="row margin_bottom_small">
+            <div class="form-group col-xs-6 margin_bottom_small">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger static_error email_error" })
+            </div>
+        </div>
 
-<div class="form-group col-xs-3 text-center "></div>
-<div class="form-group col-xs-4 text-center ">
-    <button id="btn_submit" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Create Account</button>
-</div>
-<div class="form-group col-xs-3 text-center "></div>
+        <div class="row">
+            <div class="form-group col-xs-6 margin_bottom_small">
+                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label" })
+                @Html.PasswordFor(model => model.Password, new { value = "@Model.Password", htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger static_error password_error" })
+                <span class="pssword_match_error text-danger static_error"></span>
+            </div>
+
+            <div class="form-group col-xs-6 margin_bottom_small">
+                @Html.LabelFor(model => model.PasswordConfirm, htmlAttributes: new { @class = "control-label " })
+                @Html.PasswordFor(model => model.PasswordConfirm, new { value = "@Model.Password", htmlAttributes = new { @class = "form-control small_inp_box password_box" } })
+                @Html.ValidationMessageFor(model => model.PasswordConfirm, "", new { @class = "text-danger static_error password_confirm_error" })
+            </div>
+        </div>
+
+        <hr class="margin_bottom_none margin_top_none" />
+        <strong>Optional Fields: Personal Information</strong>
+        <hr class="margin_top_none" />
+
+        <div class="row">
+            <div class="form-group col-xs-6">
+                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger static_error" })
+            </div>
+
+            <div class="form-group col-xs-6">
+                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger static_error" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-xs-6">
+                @Html.LabelFor(model => model.DisplayName, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.DisplayName, new { htmlAttributes = new { @class = "form-control small_inp_box" } })
+                @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger static_error" })
+            </div>
+
+            <div class="form-group col-xs-6">
+                @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control small_inp_box phone_number" } })
+                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger static_error" })
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="form-group col-xs-6">
+                <label class="control-label">Notification Types</label>
+                <div class="form-group " style="margin-top:5px;">
+                    <div class="col-xs-6">
+                        @Html.CheckBoxFor(m => m.PrefEmail, new { @checked = "true", @class = "" })
+                        @Html.LabelFor(model => model.PrefEmail, htmlAttributes: new { @class = "control-label margin_left_vsmall" })
+                    </div>
+                    <div class="col-xs-6">
+                        @Html.CheckBoxFor(m => m.PrefText, new { @checked = "checked" })
+                        @Html.LabelFor(model => model.PrefText, htmlAttributes: new { @class = "control-label margin_left_vsmall" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group col-xs-3 text-center "></div>
+    <div class="form-group col-xs-4 text-center ">
+        @{
+            if (@HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString() == "EditAccount")
+            { <button id="btn_submit" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Save Changes</button>}
+            else
+            { <button id="btn_submit" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Create Account</button>}
+        }
+    </div>
+    <div class="form-group col-xs-3 text-center "></div>
 
 </div>
 

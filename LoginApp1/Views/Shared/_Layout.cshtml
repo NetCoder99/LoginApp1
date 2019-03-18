@@ -17,25 +17,31 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+
+                    @if (Request.IsAuthenticated)
+                    {
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    }
+                    else
+                    {
+                        <span class="icon-bar"></span>
+                    }
+
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("AdWorks Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
                 <ul class="nav navbar-nav float_right">
-                    <li>@Html.ActionLink("Manage", "ManageAccounts", "Account")</li>
                     @if (Request.IsAuthenticated)
                     {
-                        <li>
-                            @Html.ActionLink("Logout", "Logout", "Account")
-                        </li>
+                        <li>@Html.ActionLink("Users", "ManageAccounts", "Account")</li>
+                        <li>@Html.ActionLink("Roles", "ManageRoles", "Account")</li>
+                        <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
                     }
                     else
                     {

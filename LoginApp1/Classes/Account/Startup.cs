@@ -14,12 +14,10 @@ namespace LoginApp1.Classes.Account
         public void Configuration(IAppBuilder app)
         {
             app.CreatePerOwinContext(() => new UserAccountDB());
-            app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
+            app.CreatePerOwinContext(() => new UserRoleDB());
 
-            RoleStore<AppRole> role_store = new RoleStore<AppRole>(new UserAccountDB());
-            app.CreatePerOwinContext<RoleManager<AppRole>>((options, context) =>
-                new RoleManager<AppRole>(
-                role_store));
+            app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
+            app.CreatePerOwinContext<AppRoleManager>(AppRoleManager.Create);
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {

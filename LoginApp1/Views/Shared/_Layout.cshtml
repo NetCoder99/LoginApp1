@@ -35,12 +35,13 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Roles", "IndexAppRoles", "AppRoles")</li>
                 </ul>
                 <ul class="nav navbar-nav float_right">
                     @if (Request.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Users", "ManageAccounts", "Account")</li>
-                        <li>@Html.ActionLink("Roles", "ManageRoles", "Account")</li>
+                        <li>@Html.ActionLink("Roles", "IndexAppRoles", "AppRoles")</li>
                         <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
                     }
                     else

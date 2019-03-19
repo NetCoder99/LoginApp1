@@ -47,10 +47,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.8.1.3\lib\net45\FluentValidation.dll</HintPath>
@@ -180,7 +180,19 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Classes\Account\AppRoleManager.cs" />
     <Compile Include="Classes\Account\AppUserManager.cs" />
+    <Compile Include="Controllers\AppRolesController.cs" />
+    <Compile Include="DataConnections\UserRoleDB.cs" />
+    <Compile Include="Migrations\201903191818231_approles1.cs" />
+    <Compile Include="Migrations\201903191818231_approles1.Designer.cs">
+      <DependentUpon>201903191818231_approles1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903192135554_approles3.cs" />
+    <Compile Include="Migrations\201903192135554_approles3.Designer.cs">
+      <DependentUpon>201903192135554_approles3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Account\AppRoleValid.cs" />
     <Compile Include="Models\Account\ResetPassword.cs" />
     <Compile Include="Models\Account\ResetPasswordValid.cs" />
     <Compile Include="Models\GetModelErrors.cs" />
@@ -526,6 +538,8 @@
     <Content Include="Views\Account\AccountDetails.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\AppRoles\IndexAppRoles.cshtml" />
+    <Content Include="Views\AppRoles\CreateAppRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -564,6 +578,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903112052390_userid5.resx">
       <DependentUpon>201903112052390_userid5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903191818231_approles1.resx">
+      <DependentUpon>201903191818231_approles1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903192135554_approles3.resx">
+      <DependentUpon>201903192135554_approles3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

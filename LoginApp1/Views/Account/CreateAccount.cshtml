@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 @using (Ajax.BeginForm("CreateAccount", "Account", null,
     new AjaxOptions {
         HttpMethod = "POST",
@@ -30,116 +29,116 @@
 
 }
 
-    @section scripts{
-        <script>
-            $(document).ready(function () {
-                console.log("ready to rock and roll....");
-                $(".small_inp_box:first").focus();
-                $(".small_inp_box").addClass("lgreen");
-                $("input:password").addClass("lgreen");
-                $("input:password").addClass("form-control");
-            });
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            console.log("ready to rock and roll....");
+            $(".small_inp_box:first").focus();
+            $(".small_inp_box").addClass("lgreen");
+            $("input:password").addClass("lgreen");
+            $("input:password").addClass("form-control");
+        });
 
-            function OnBegin() {
-                DisableInputs(true);
+        function OnBegin() {
+            DisableInputs(true);
+        }
+
+        function OnComplete() {
+        }
+
+        function OnSuccess() {
+            DisableInputs(false);
+            ShowMessage("Account was created.", false);
+        }
+
+        function OnFailure(xhr, status) {
+            DisableInputs(false);
+            $("#btn_submit").text("Create Account");
+            $(".email_error").text(xhr.responseJSON.param2);
+            $("#Email").removeClass("lgreen");
+            $("#Email").addClass("lred");
+            ShowMessage("Update failed.", true);
+        }
+
+        function ShowMessage(message, error) {
+            if (error) {
+                $("#img_success").hide();
+                $("#img_warning").show();
             }
-
-            function OnComplete() {
+            else {
+                $("#img_success").show();
+                $("#img_warning").hide();
             }
+            $("#lbl_message").text(message);
+            $("#div_message").show();
+            setTimeout(function () {
+                $("#div_message").hide();
+            }, 5000);
+        }
 
-            function OnSuccess() {
-                DisableInputs(false);
-                ShowMessage("Account was created.", false);
+        function DisableInputs(flag) {
+            if (flag) {
+                $(".small_inp_box").prop("disabled", true);
+                $("input:password").prop("disabled", true);
+                $("#btn_submit").prop("disabled", true);
+                $("#btn_submit").text("Processing", true);
             }
-
-            function OnFailure(xhr, status) {
-                DisableInputs(false);
+            else {
+                $(".small_inp_box").prop("disabled", false);
+                $("input:password").prop("disabled", false);
+                $("#btn_submit").prop("disabled", false);
                 $("#btn_submit").text("Create Account");
-                $(".email_error").text(xhr.responseJSON.param2);
-                $("#Email").removeClass("lgreen");
-                $("#Email").addClass("lred");
-                ShowMessage("Update failed.", true);
             }
+        }
 
-            function ShowMessage(message, error) {
-                if (error) {
-                    $("#img_success").hide();
-                    $("#img_warning").show();
+        $("input:password").focusout(function () {
+            console.log("checking for invalids");
+            var fv = $('#myform').validate();
+            if (!$(this).valid()) {
+                $(this).removeClass("lgreen");
+                $(this).addClass("lred");
+                if (this.name == "PasswordConfirm" || this.name == "Password") {
+                    console.log("PasswordConfirm was invalid");
+                    //$("#Password").removeClass("lgreen");
+                    //$("#Password").addClass("lred");
+                    //$("#PasswordConfirm").removeClass("lgreen");
+                    //$("#PasswordConfirm").addClass("lred");
                 }
                 else {
-                    $("#img_success").show();
-                    $("#img_warning").hide();
-                }
-                $("#lbl_message").text(message);
-                $("#div_message").show();
-                setTimeout(function () {
-                    $("#div_message").hide();
-                }, 5000);
-            }
-
-            function DisableInputs(flag) {
-                if (flag) {
-                    $(".small_inp_box").prop("disabled", true);
-                    $("input:password").prop("disabled", true);
-                    $("#btn_submit").prop("disabled", true);
-                    $("#btn_submit").text("Processing", true);
-                }
-                else {
-                    $(".small_inp_box").prop("disabled", false);
-                    $("input:password").prop("disabled", false);
-                    $("#btn_submit").prop("disabled", false);
-                    $("#btn_submit").text("Create Account");
-                }
-            }
-
-            $("input:password").focusout(function () {
-                console.log("checking for invalids");
-                var fv = $('#myform').validate();
-                if (!$(this).valid()) {
-                    $(this).removeClass("lgreen");
                     $(this).addClass("lred");
-                    if (this.name == "PasswordConfirm" || this.name == "Password") {
-                        console.log("PasswordConfirm was invalid");
-                        //$("#Password").removeClass("lgreen");
-                        //$("#Password").addClass("lred");
-                        //$("#PasswordConfirm").removeClass("lgreen");
-                        //$("#PasswordConfirm").addClass("lred");
-                    }
-                    else {
-                        $(this).addClass("lred");
-                        $(this).removeClass("lgreen");
-                    }
-                }
-                else {
-                    if (this.name == "PasswordConfirm" || this.name == "Password") {
-                        console.log("PasswordConfirm was valid");
-                        $("#Password").removeClass("lred");
-                        $("#Password").addClass("lgreen");
-                        $("#PasswordConfirm").removeClass("lred");
-                        $("#PasswordConfirm").addClass("lgreen");
-                    }
-                    else {
-                        $(this).addClass("lgreen");
-                        $(this).removeClass("lred");
-                    }
-                    console.log("valid!");
-                }
-            });
-
-
-            $(".small_inp_box").focusout(function () {
-                console.log("checking for invalids");
-                var fv = $('#myform').validate();
-                if (!$(this).valid()) {
                     $(this).removeClass("lgreen");
-                    $(this).addClass("lred");
+                }
+            }
+            else {
+                if (this.name == "PasswordConfirm" || this.name == "Password") {
+                    console.log("PasswordConfirm was valid");
+                    $("#Password").removeClass("lred");
+                    $("#Password").addClass("lgreen");
+                    $("#PasswordConfirm").removeClass("lred");
+                    $("#PasswordConfirm").addClass("lgreen");
                 }
                 else {
                     $(this).addClass("lgreen");
                     $(this).removeClass("lred");
-                    console.log("valid!");
                 }
-            });
+                console.log("valid!");
+            }
+        });
 
-        </script>
-    }
+
+        $(".small_inp_box").focusout(function () {
+            console.log("checking for invalids");
+            var fv = $('#myform').validate();
+            if (!$(this).valid()) {
+                $(this).removeClass("lgreen");
+                $(this).addClass("lred");
+            }
+            else {
+                $(this).addClass("lgreen");
+                $(this).removeClass("lred");
+                console.log("valid!");
+            }
+        });
+
+    </script>
+}

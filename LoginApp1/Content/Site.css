@@ -53,6 +53,10 @@ textarea {
     margin-left: 3px;
 }
 
+.margin_left_2em {
+    margin-left: 2em;
+}
+
 .margin_top_vsmall {
     margin-top: 3px;
 }

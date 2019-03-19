@@ -1,0 +1,190 @@
+﻿@model LoginApp1.Models.Account.AppRole
+
+@{
+    ViewBag.Title = "CreateAppRole";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Ajax.BeginForm("CreateAppRole", "AppRoles", null,
+    new AjaxOptions
+    {
+        HttpMethod = "Post",
+        OnBegin = "OnBegin",
+        OnFailure = "OnFailure(xhr, status)",
+        OnSuccess = "OnSuccess"
+    },
+    new { id = "myform" }))
+{
+
+    @Html.AntiForgeryToken()
+        
+    <div class="logo mb-3">
+        <div class="col-md-12 text-center">
+            <h2>Edit the application role:</h2>
+        </div>
+    </div>
+
+    <div class="col-xs-1"></div>
+    <div class="col-xs-10">
+        <div>
+            <div id="div_message" class="float_right lcl_hidden">
+                <img id="img_success" class="lcl_hidden" src="~/Content/Icons/success.png" style="height:18px;" />
+                <img id="img_warning" class="lcl_hidden" src="~/Content/Icons/warning.png" style="height:18px;" />
+                <span id="lbl_message">Message</span>
+            </div>
+        </div>
+
+        <div>
+            @Html.ActionLink("Back to roles list", "IndexAppRoles")
+        </div>
+        <div class="form-horizontal">
+            <hr class="margin_bottom_small" />
+            <h4>Edit the application role details:</h4>
+
+            <div class="row margin_bottom_small">
+                <div class="col-xs-3 margin_bottom_small">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "RoleName",  @class = "form-control small_inp_box" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @id = "RoleNameError",  @class = "text-danger static_error" })
+                </div>
+                <div class="col-xs-4  margin_left_2em">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @id = "RoleDescription", @class = "form-control small_inp_box" } })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @id = "RoleDescriptionError", @class = "text-danger static_error" })
+                </div>
+                <div class="col-xs-1  margin_left_2em">
+                    <label class="control-label">&nbsp;</label>
+                    <label class="control-label">&nbsp;</label>
+                    <input type="submit" id="btn_submit" value="Save Role" class="btn btn-default btn-primary" />
+                </div>
+            </div>
+
+            <hr class="margin_top_none margin_bottom_none" />
+        </div>
+    </div>
+    <div class="col-xs-1"></div>
+    <br style="clear:both;" />
+
+    <div class="form-horizontal">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10">
+            <h4>Add or remove users to this role:</h4>
+
+            <table class="table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <td>User Id</td>
+                        <td>User Name</td>
+                        <td>User Desc</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>User Id</td>
+                        <td>User Name</td>
+                        <td>User Desc</td>
+                        <td>Action</td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <br style="clear:both;" />
+            <div class="col-xs-2 form-group">
+                <input type="submit" value="Save Changes" class="btn btn-default btn-primary" />
+            </div>
+
+            <br style="clear:both;" />
+            <hr />
+        </div>
+        <div class="col-xs-1"></div>
+        <br style="clear:both;" />
+    </div>
+
+}
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            console.log("ready to rock and roll....");
+            $(".small_inp_box:first").focus();
+            $(".small_inp_box").addClass("lgreen");
+        });
+
+        function OnBegin() {
+            console.log("OnBegin");
+            DisableInputs(true);
+        }
+
+        function OnSuccess() {
+            console.log("OnSuccess");
+            DisableInputs(false);
+            ShowMessage("Role was created.", false);
+            $("#RoleName").removeClass("lred");
+            $("#RoleName").addClass("lgreen");
+            $("#RoleNameError").addClass("hidden");
+            $("#RoleNameError").text('');
+        }
+
+        function OnFailure(xhr, status) {
+            console.log("OnFailure");
+            DisableInputs(false);
+            $("#btn_submit").text("Create Account");
+            ShowMessage("Update failed.", true);
+            if (xhr.responseJSON.param1 == "RoleName") {
+                $("#RoleName").removeClass("lgreen");
+                $("#RoleName").addClass("lred");
+                $("#RoleNameError").removeClass("hidden");
+                $("#RoleNameError").text(xhr.responseJSON.param3);
+            }
+        }
+
+        function ShowMessage(message, error) {
+            if (error) {
+                $("#img_success").hide();
+                $("#img_warning").show();
+            }
+            else {
+                $("#img_success").show();
+                $("#img_warning").hide();
+            }
+            $("#lbl_message").text(message);
+            $("#div_message").show();
+            setTimeout(function () {
+                $("#div_message").hide();
+            }, 5000);
+        }
+
+        function DisableInputs(flag) {
+            if (flag) {
+                $(".small_inp_box").prop("disabled", true);
+                $("input:password").prop("disabled", true);
+                $("#btn_submit").prop("disabled", true);
+                $("#btn_submit").text("Processing", true);
+            }
+            else {
+                $(".small_inp_box").prop("disabled", false);
+                $("input:password").prop("disabled", false);
+                $("#btn_submit").prop("disabled", false);
+                $("#btn_submit").text("Save Role");
+            }
+        }
+
+        $(".small_inp_box").focusout(function () {
+            console.log("checking for invalids");
+            var fv = $('#myform').validate();
+            if (!$(this).valid()) {
+                $(this).removeClass("lgreen");
+                $(this).addClass("lred");
+            }
+            else {
+                $(this).addClass("lgreen");
+                $(this).removeClass("lred");
+                console.log("valid!");
+            }
+        });
+
+    </script>
+}

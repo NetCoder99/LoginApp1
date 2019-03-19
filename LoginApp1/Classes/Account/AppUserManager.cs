@@ -12,23 +12,12 @@ namespace LoginApp1.Classes.Account
 {
     public class AppUserManager : UserManager<AppUser>
     {
-        private AppUser model;
-
-        public AppUserManager(IUserStore<AppUser> store) : base(store)
-        {
-
-        }
+        public AppUserManager(UserStore<AppUser> store) : base(store){ }
 
         public static AppUserManager Create(IdentityFactoryOptions<AppUserManager> options, IOwinContext context)
         {
             var manager = new AppUserManager(new UserStore<AppUser>(context.Get<UserAccountDB>()));
             return manager;
         }
-
-        //public override Task<ClaimsIdentity> CreateIdentityAsync(AppUser user, string authenticationType)
-        //{
-        //    return base.CreateIdentityAsync(user, authenticationType);
-        //}
-
     }
 }

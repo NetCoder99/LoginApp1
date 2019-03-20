@@ -227,7 +227,6 @@ namespace LoginApp1.Controllers
                         HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                         ViewBag.deleteMsg = "Account was deleted";
                         return RedirectToAction("ManageAccounts", new { deleteMsg = jsonMessage });
-                        //return Json(jsonMessage, JsonRequestBehavior.AllowGet);
                     }
 
                 }

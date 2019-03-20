@@ -11,7 +11,7 @@
             <img id="img_warning" class="lcl_hidden" src="~/Content/Icons/warning.png" style="height:18px;" />
             <span id="lbl_message">Message</span>
         </div>
-        @Html.ActionLink("Create New", "CreateAppRole")
+        @Html.ActionLink("Create New", "EditAppRole")
     </p>
 
     @if (@Model.appRoles.Count > 0)
@@ -57,7 +57,7 @@
                         @Html.DisplayFor(modelItem => item.CreateDate)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Edit", "EditAppRole", new { id = item.Id }) |
                         @Html.ActionLink("Delete", "DeleteAppRole",
                               new { id = item.Id },
                               new { onclick = "javascript:return Submit('" + item.Id + "');" })

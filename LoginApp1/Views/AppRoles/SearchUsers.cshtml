@@ -1,0 +1,29 @@
+﻿@model LoginApp1.Models.Account.SearchUsers
+
+<div class="form-horizontal">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-10">
+        <h4>Add user to this role:</h4>
+        <div class="row margin_bottom_small">
+            <div class="col-xs-2 margin_bottom_small">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @id = "SrchEmail", @class = "form-control" } })
+            </div>
+            <div class="col-xs-3  margin_left_1em">
+                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @id = "SrchFirstName", @class = "form-control " } })
+            </div>
+            <div class="col-xs-4  margin_left_1em">
+                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @id = "SrchLastName", @class = "form-control " } })
+            </div>
+            <div class="col-xs-1  margin_left_2em">
+                <label class="control-label">&nbsp;</label>
+                <label class="control-label">&nbsp;</label>
+                <input type="submit" id="btn_submit" value="Search" class="btn btn-default btn-primary" onclick="javascript:return Search();" />
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-1"> </div>
+</div>
+

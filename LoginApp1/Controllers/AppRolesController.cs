@@ -14,6 +14,7 @@ namespace LoginApp1.Controllers
     public class AppRolesController : Controller
     {
 
+        // ===============================================================================
         public ActionResult IndexAppRoles()
         {
             using (var roleManager1 = HttpContext.GetOwinContext().Get<AppRoleManager>())
@@ -26,6 +27,7 @@ namespace LoginApp1.Controllers
             }
         }
 
+        // ===============================================================================
         public ActionResult DeleteAppRole(AppRoleView model)
         {
             using (var role_Manager = HttpContext.GetOwinContext().Get<AppRoleManager>())
@@ -42,21 +44,29 @@ namespace LoginApp1.Controllers
                     model.status = "Error";
                     model.message = "Role was not found.";
                 }
-
                 model.appRoles = role_Manager.Roles.ToList();
                 return PartialView("IndexAppRolesPartial", model);
             }
         }
 
-
+        // ===============================================================================
         [HttpGet]
-        public ActionResult CreateAppRole()
+        public ActionResult EditAppRole(string id)
         {
-            AppRole model = new AppRole();
+            AppRoleView model = new AppRoleView();
+            using (var role_Manager = HttpContext.GetOwinContext().Get<AppRoleManager>())
+            {
+                AppRole appRole = role_Manager.Roles.FirstOrDefault(f => f.Id == id);
+                if (appRole != null)
+                { model.appRole = appRole; }
+                // !!! else - handle not found, when id not null !!!
+            }
             return View(model);
         }
+
+        // ===============================================================================
         [HttpPost]
-        public ActionResult CreateAppRole(AppRole model)
+        public ActionResult EditAppRole(AppRoleView model)
         {
             System.Threading.Thread.Sleep(200);
             dynamic jsonMessage;
@@ -67,24 +77,37 @@ namespace LoginApp1.Controllers
             }
             else
             {
-                var role_Manager = HttpContext.GetOwinContext().Get<AppRoleManager>();
-                if (role_Manager.RoleExists(model.Name))
+                using (var role_Manager = HttpContext.GetOwinContext().Get<AppRoleManager>())
                 {
-                    jsonMessage = new { param1 = "RoleName", param2 = "Exists", param3 = "Role already exists." };
-                    HttpContext.Response.StatusCode = (int)HttpStatusCode.NotAcceptable;
-                    return Json(jsonMessage, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    model.CreateDate = DateTime.Now;
-                    role_Manager.Create(model);
-                    jsonMessage = new { param1 = "RoleName", param2 = "", param3 = "Role was created." };
+                    AppRole appRole = role_Manager.Roles.FirstOrDefault(f => f.Id == model.appRole.Id);
+                    if (appRole == null)
+                    {
+                        appRole = new AppRole();
+                        appRole.Name = model.appRole.Name;
+                        appRole.Description = model.appRole.Description;
+                        appRole.CreateDate = DateTime.Now;
+                        role_Manager.Create(appRole);
+                        jsonMessage = new { param1 = "RoleName", param2 = "", param3 = "Role was created." };
+                        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                    }
+
+                    appRole.Description = model.appRole.Description;
+                    role_Manager.Update(appRole);
+                    jsonMessage = new { param1 = "RoleName", param2 = "OK", param3 = "Role was updated." };
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                     return Json(jsonMessage, JsonRequestBehavior.AllowGet);
                 }
             }
             return View(model);
         }
+
+
+            //using (var userManager = HttpContext.GetOwinContext().GetUserManager<AppUserManager>())
+            //{
+            //    List<AppUser> model = userManager.Users.ToList();
+            //    return View(model);
+            //}
 
 
     }

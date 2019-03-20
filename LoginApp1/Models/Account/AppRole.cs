@@ -12,7 +12,8 @@ namespace LoginApp1.Models.Account
     [FluentValidation.Attributes.Validator(typeof(AppRoleValid))]
     public class AppRole : IdentityRole
     {
-        public AppRole() : base() { }
+        public AppRole() : base()
+        {  }
         public AppRole(string name) : base(name)
         {  }
 

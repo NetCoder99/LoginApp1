@@ -1,11 +1,11 @@
-﻿@model LoginApp1.Models.Account.AppRole
+﻿@model LoginApp1.Models.Account.AppRoleView
 
 @{
-    ViewBag.Title = "CreateAppRole";
+    ViewBag.Title = "EditAppRole";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using (Ajax.BeginForm("CreateAppRole", "AppRoles", null,
+@using (Ajax.BeginForm("EditAppRole", "AppRoles", null,
     new AjaxOptions
     {
         HttpMethod = "Post",
@@ -17,7 +17,12 @@
 {
 
     @Html.AntiForgeryToken()
-        
+    @Html.HiddenFor(m => m.appRole.Id)
+
+    @Html.HiddenFor(m => m.searchUsers.Email, new { @id = "hdn_email" })
+    @Html.HiddenFor(m => m.searchUsers.FirstName, new { @id = "hdn_fname" })
+    @Html.HiddenFor(m => m.searchUsers.LastName, new { @id = "hdn_lname" })
+    
     <div class="logo mb-3">
         <div class="col-md-12 text-center">
             <h2>Edit the application role:</h2>
@@ -40,17 +45,21 @@
         <div class="form-horizontal">
             <hr class="margin_bottom_small" />
             <h4>Edit the application role details:</h4>
-
             <div class="row margin_bottom_small">
-                <div class="col-xs-3 margin_bottom_small">
-                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @id = "RoleName",  @class = "form-control small_inp_box" } })
-                    @Html.ValidationMessageFor(model => model.Name, "", new { @id = "RoleNameError",  @class = "text-danger static_error" })
+                <div class="col-xs-2 margin_bottom_small">
+                    @Html.LabelFor(model => model.appRole.RoleId, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.appRole.RoleId, new { htmlAttributes = new { @id = "RoleId", @class = "form-control small_inp_box", @disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.appRole.RoleId, "", new { @id = "RoleIdError", @class = "text-danger static_error" })
                 </div>
-                <div class="col-xs-4  margin_left_2em">
-                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @id = "RoleDescription", @class = "form-control small_inp_box" } })
-                    @Html.ValidationMessageFor(model => model.Description, "", new { @id = "RoleDescriptionError", @class = "text-danger static_error" })
+                <div class="col-xs-3 margin_bottom_small">
+                    @Html.LabelFor(model => model.appRole.Name, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.appRole.Name, new { htmlAttributes = new { @id = "RoleName", @class = "form-control small_inp_box" } })
+                    @Html.ValidationMessageFor(model => model.appRole.Name, "", new { @id = "RoleNameError", @class = "text-danger static_error" })
+                </div>
+                <div class="col-xs-4">
+                    @Html.LabelFor(model => model.appRole.Description, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.appRole.Description, new { htmlAttributes = new { @id = "RoleDescription", @class = "form-control small_inp_box" } })
+                    @Html.ValidationMessageFor(model => model.appRole.Description, "", new { @id = "RoleDescriptionError", @class = "text-danger static_error" })
                 </div>
                 <div class="col-xs-1  margin_left_2em">
                     <label class="control-label">&nbsp;</label>
@@ -58,51 +67,24 @@
                     <input type="submit" id="btn_submit" value="Save Role" class="btn btn-default btn-primary" />
                 </div>
             </div>
-
             <hr class="margin_top_none margin_bottom_none" />
         </div>
     </div>
     <div class="col-xs-1"></div>
     <br style="clear:both;" />
 
-    <div class="form-horizontal">
-        <div class="col-xs-1"></div>
-        <div class="col-xs-10">
-            <h4>Add or remove users to this role:</h4>
-
-            <table class="table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <td>User Id</td>
-                        <td>User Name</td>
-                        <td>User Desc</td>
-                        <td>Action</td>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>User Id</td>
-                        <td>User Name</td>
-                        <td>User Desc</td>
-                        <td>Action</td>
-                    </tr>
-                </tbody>
-
-            </table>
-            <br style="clear:both;" />
-            <div class="col-xs-2 form-group">
-                <input type="submit" value="Save Changes" class="btn btn-default btn-primary" />
-            </div>
-
-            <br style="clear:both;" />
-            <hr />
-        </div>
-        <div class="col-xs-1"></div>
-        <br style="clear:both;" />
-    </div>
-
 }
+
+
+
+<div id="div_editUserRoles">
+    @{ Html.RenderPartial("SearchUsers", Model.searchUsers); }
+</div>
+<br style="clear:both;" />
+
+<div id="div_editUserRoles">
+    @{ Html.RenderPartial("EditUserRolesPartial", Model); }
+</div>
 
 
 @section scripts{
@@ -111,7 +93,17 @@
             console.log("ready to rock and roll....");
             $(".small_inp_box:first").focus();
             $(".small_inp_box").addClass("lgreen");
+            $("#tbl_userroles").dataTable({ searching: false, info: false, lengthChange: false, });
+
         });
+        function Search() {
+            $("#hdn_email").val($("#SrchEmail").val());
+            $("#hdn_fname").val($("#SrchFirstName").val());
+            $("#hdn_lname").val($("#SrchLastName").val());
+            console.log("Search:");
+            $('form#myform').submit();
+            return false;
+        }
 
         function OnBegin() {
             console.log("OnBegin");

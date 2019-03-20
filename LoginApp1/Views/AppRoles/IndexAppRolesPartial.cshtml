@@ -1,37 +1,54 @@
-﻿@model IEnumerable<LoginApp1.Models.Account.AppRole>
+﻿@model LoginApp1.Models.Account.AppRoleView
 
-<div class="col-xs-2"></div>
-<div class="col-xs-8">
+@Html.HiddenFor(m => m.status, new { @id = "hiddenStatus" })
+@Html.HiddenFor(m => m.message, new { @id = "hiddenmessage" })
+
+<div class="col-xs-1"></div>
+<div class="col-xs-10">
     <p>
+        <div id="div_message" class="float_right ">
+            <img id="img_success" class="" src="~/Content/Icons/success.png" style="height:18px;" />
+            <img id="img_warning" class="lcl_hidden" src="~/Content/Icons/warning.png" style="height:18px;" />
+            <span id="lbl_message">Message</span>
+        </div>
         @Html.ActionLink("Create New", "CreateAppRole")
     </p>
-    <table class="table table-bordered table-condensed" id="tbl_roles">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.RoleId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UserCount)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreateDate)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+
+    @if (@Model.appRoles.Count > 0)
+    {
+        <table class="table table-bordered table-condensed" id="tbl_roles">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.appRoles[0].RoleId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.appRoles[0].Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.appRoles[0].Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.appRoles[0].UserCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.appRoles[0].CreateDate)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.appRoles)
+                {
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.RoleId)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.UserCount)
@@ -41,16 +58,19 @@
                     </td>
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "DeleteAppRole", 
-                                         new { id = item.Id }, 
-                                         new { onclick = "javascript:return Submit('" + item.Id +"');" })
+                        @Html.ActionLink("Delete", "DeleteAppRole",
+                              new { id = item.Id },
+                              new { onclick = "javascript:return Submit('" + item.Id + "');" })
                     </td>
                 </tr>
-            }
-        </tbody>
-    </table>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <span>No roles match that search request.</span>
+    }
 </div>
-<div class="col-xs-2"></div>
-
+<div class="col-xs-1"></div>
 <br style="clear:both;" />
-

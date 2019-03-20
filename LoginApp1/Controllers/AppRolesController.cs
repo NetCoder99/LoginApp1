@@ -1,9 +1,6 @@
 ﻿using LoginApp1.Classes.Account;
-using LoginApp1.DataConnections;
-using LoginApp1.Models;
 using LoginApp1.Models.Account;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
@@ -24,21 +21,30 @@ namespace LoginApp1.Controllers
                 var t_roles = roleManager1.Roles.ToList();
                 AppRoleView model = new AppRoleView();
                 model.appRoles = roleManager1.Roles.ToList();
+                model.status = "Init";
                 return View(model);
             }
         }
 
         public ActionResult DeleteAppRole(AppRoleView model)
         {
-            dynamic jsonMessage;
             using (var role_Manager = HttpContext.GetOwinContext().Get<AppRoleManager>())
             {
                 AppRole appRole = role_Manager.FindById(model.key);
                 if (appRole != null)
-                { role_Manager.Delete(appRole); }
-                
-                List<AppRole> t_roles = role_Manager.Roles.ToList();
-                return PartialView("IndexAppRolesPartial", t_roles);
+                {
+                    role_Manager.Delete(appRole);
+                    model.status = "OK";
+                    model.message = "Role was deleted.";
+                }
+                else
+                {
+                    model.status = "Error";
+                    model.message = "Role was not found.";
+                }
+
+                model.appRoles = role_Manager.Roles.ToList();
+                return PartialView("IndexAppRolesPartial", model);
             }
         }
 

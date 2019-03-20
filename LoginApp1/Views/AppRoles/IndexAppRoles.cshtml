@@ -11,14 +11,14 @@
         HttpMethod = "Post",
         OnBegin = "OnBegin",
         OnFailure = "OnFailure(xhr, status)",
-        OnSuccess = "OnSuccess",
+        OnSuccess = "OnSuccess(xhr, status)",
         UpdateTargetId = "AppRolesTable"
     },
     new { id = "myform" }))
 {
 
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(m=>m.key, new { @id="hiddenKey" })
+    @Html.HiddenFor(m => m.key, new { @id = "hiddenKey" })
 
     <div class="logo mb-3">
         <div class="col-md-12 text-center">
@@ -28,7 +28,7 @@
 
 }
 <div id='AppRolesTable'>
-    @{ Html.RenderPartial("IndexAppRolesPartial", Model.appRoles); }
+    @{ Html.RenderPartial("IndexAppRolesPartial", Model); }
 </div>
 
 
@@ -41,8 +41,25 @@
 
         function Submit(Id) {
             console.log("Submit:" + Id);
-            $('#hiddenKey').val(Id);
-            $('form#myform').submit();
+            bootbox.confirm({
+                title: "Delete Applicaton Role!?",
+                message: "Do you want to delete this role and remove the roles from all users.",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    console.log('This was logged in the callback: ' + result);
+                    if (result) {
+                        $('#hiddenKey').val(Id);
+                        $('form#myform').submit();
+                    }
+                }
+            });
             return false;
         }
 
@@ -53,7 +70,16 @@
 
         function OnSuccess() {
             console.log("OnSuccess");
+            var status = $("#hiddenStatus").val();
+            var message = $("#hiddenmessage").val();
+            if (status != '') {
+                console.log("Status:" + status);
+            }
+            if (message != '') {
+                console.log("Message:" + message);
+            }
             DisableInputs(false);
+            ShowMessage(message, false);
         }
 
         function OnFailure(xhr, status) {
@@ -75,5 +101,22 @@
                 $("#btn_submit").text("Save Role");
             }
         }
+
+        function ShowMessage(message, error) {
+            if (error) {
+                $("#img_success").hide();
+                $("#img_warning").show();
+            }
+            else {
+                $("#img_success").show();
+                $("#img_warning").hide();
+            }
+            $("#lbl_message").text(message);
+            $("#div_message").show();
+            setTimeout(function () {
+                $("#div_message").hide();
+            }, 5000);
+        }
+
     </script>
 }

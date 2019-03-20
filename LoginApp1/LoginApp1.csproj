@@ -254,7 +254,6 @@
     <Compile Include="Models\Account\LoginCredsValid.cs" />
     <Compile Include="Models\Errors.cs" />
     <Compile Include="Models\GetModelUpdates.cs" />
-    <Compile Include="Models\ViewKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

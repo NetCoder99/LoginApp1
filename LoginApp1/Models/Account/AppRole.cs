@@ -16,6 +16,11 @@ namespace LoginApp1.Models.Account
         public AppRole(string name) : base(name)
         {  }
 
+        [Display(Name = "Role Id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Index("IX_RoleId", IsUnique = true)]
+        public int RoleId{ get; set; }
+
         [Display(Name = "Role Description")]
         [StringLength(50)]
         public string Description { get; set; }

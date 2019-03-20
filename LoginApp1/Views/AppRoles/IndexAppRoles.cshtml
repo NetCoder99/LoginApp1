@@ -1,66 +1,79 @@
-﻿@model IEnumerable<LoginApp1.Models.Account.AppRole>
+﻿@model LoginApp1.Models.Account.AppRoleView
 
 @{
     ViewBag.Title = "IndexAppRoles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="logo mb-3">
-    <div class="col-md-12 text-center">
-        <h2>Review and edit application roles</h2>
+@using (Ajax.BeginForm("DeleteAppRole", "AppRoles", null,
+    new AjaxOptions
+    {
+        HttpMethod = "Post",
+        OnBegin = "OnBegin",
+        OnFailure = "OnFailure(xhr, status)",
+        OnSuccess = "OnSuccess",
+        UpdateTargetId = "AppRolesTable"
+    },
+    new { id = "myform" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m=>m.key, new { @id="hiddenKey" })
+
+    <div class="logo mb-3">
+        <div class="col-md-12 text-center">
+            <h2>Review and edit application roles</h2>
+        </div>
     </div>
+
+}
+<div id='AppRolesTable'>
+    @{ Html.RenderPartial("IndexAppRolesPartial", Model.appRoles); }
 </div>
 
-<div class="col-xs-2"></div>
-<div class="col-xs-8">
-    <p>
-        @Html.ActionLink("Create New", "CreateAppRole")
-    </p>
-    <table class="table table-bordered table-condensed" id="tbl_roles">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UserCount)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreateDate)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserCount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
-            </tr>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            console.log("ready to rock and roll....");
+            $("#tbl_roles").dataTable({ searching: false, info: false, lengthChange: false, });
+        });
+
+        function Submit(Id) {
+            console.log("Submit:" + Id);
+            $('#hiddenKey').val(Id);
+            $('form#myform').submit();
+            return false;
+        }
+
+        function OnBegin() {
+            console.log("OnBegin");
+            DisableInputs(true);
+        }
+
+        function OnSuccess() {
+            console.log("OnSuccess");
+            DisableInputs(false);
+        }
+
+        function OnFailure(xhr, status) {
+            console.log("OnFailure");
+            DisableInputs(false);
+        }
+
+        function DisableInputs(flag) {
+            if (flag) {
+                $(".small_inp_box").prop("disabled", true);
+                $("input:password").prop("disabled", true);
+                $("#btn_submit").prop("disabled", true);
+                $("#btn_submit").text("Processing", true);
             }
-        </tbody>
-    </table>
-</div>
-<div class="col-xs-2"></div>
-<br style="clear:both;"
-    @section scripts{
-<script>
-    $(document).ready(function () {
-        console.log("ready to rock and roll....");
-        $("#tbl_roles").dataTable({ searching: false, info: false, lengthChange: false, });
-    });
-
-</script>
+            else {
+                $(".small_inp_box").prop("disabled", false);
+                $("input:password").prop("disabled", false);
+                $("#btn_submit").prop("disabled", false);
+                $("#btn_submit").text("Save Role");
+            }
+        }
+    </script>
 }

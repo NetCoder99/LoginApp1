@@ -192,7 +192,20 @@
     <Compile Include="Migrations\201903192135554_approles3.Designer.cs">
       <DependentUpon>201903192135554_approles3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903201615525_added_roleid.cs" />
+    <Compile Include="Migrations\201903201615525_added_roleid.Designer.cs">
+      <DependentUpon>201903201615525_added_roleid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903201618048_added_roleid2.cs" />
+    <Compile Include="Migrations\201903201618048_added_roleid2.Designer.cs">
+      <DependentUpon>201903201618048_added_roleid2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903201620328_added_roleid3.cs" />
+    <Compile Include="Migrations\201903201620328_added_roleid3.Designer.cs">
+      <DependentUpon>201903201620328_added_roleid3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Account\AppRoleValid.cs" />
+    <Compile Include="Models\Account\AppRoleView.cs" />
     <Compile Include="Models\Account\ResetPassword.cs" />
     <Compile Include="Models\Account\ResetPasswordValid.cs" />
     <Compile Include="Models\GetModelErrors.cs" />
@@ -241,6 +254,7 @@
     <Compile Include="Models\Account\LoginCredsValid.cs" />
     <Compile Include="Models\Errors.cs" />
     <Compile Include="Models\GetModelUpdates.cs" />
+    <Compile Include="Models\ViewKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -540,6 +554,7 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\AppRoles\IndexAppRoles.cshtml" />
     <Content Include="Views\AppRoles\CreateAppRole.cshtml" />
+    <Content Include="Views\AppRoles\IndexAppRolesPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -584,6 +599,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903192135554_approles3.resx">
       <DependentUpon>201903192135554_approles3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903201615525_added_roleid.resx">
+      <DependentUpon>201903201615525_added_roleid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903201618048_added_roleid2.resx">
+      <DependentUpon>201903201618048_added_roleid2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903201620328_added_roleid3.resx">
+      <DependentUpon>201903201620328_added_roleid3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<LoginApp1.Models.Account.AppRole>
+
+<div class="col-xs-2"></div>
+<div class="col-xs-8">
+    <p>
+        @Html.ActionLink("Create New", "CreateAppRole")
+    </p>
+    <table class="table table-bordered table-condensed" id="tbl_roles">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoleId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreateDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoleId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "DeleteAppRole", 
+                                         new { id = item.Id }, 
+                                         new { onclick = "javascript:return Submit('" + item.Id +"');" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="col-xs-2"></div>
+
+<br style="clear:both;" />
+

@@ -1,5 +1,6 @@
 ﻿using LoginApp1.Classes.Account;
 using LoginApp1.DataConnections;
+using LoginApp1.Models;
 using LoginApp1.Models.Account;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -18,10 +19,29 @@ namespace LoginApp1.Controllers
 
         public ActionResult IndexAppRoles()
         {
-            var roleManager1 = HttpContext.GetOwinContext().Get<AppRoleManager>();
-            var t_roles = roleManager1.Roles.ToList();
-            return View(t_roles);
+            using (var roleManager1 = HttpContext.GetOwinContext().Get<AppRoleManager>())
+            {
+                var t_roles = roleManager1.Roles.ToList();
+                AppRoleView model = new AppRoleView();
+                model.appRoles = roleManager1.Roles.ToList();
+                return View(model);
+            }
         }
+
+        public ActionResult DeleteAppRole(AppRoleView model)
+        {
+            dynamic jsonMessage;
+            using (var role_Manager = HttpContext.GetOwinContext().Get<AppRoleManager>())
+            {
+                AppRole appRole = role_Manager.FindById(model.key);
+                if (appRole != null)
+                { role_Manager.Delete(appRole); }
+                
+                List<AppRole> t_roles = role_Manager.Roles.ToList();
+                return PartialView("IndexAppRolesPartial", t_roles);
+            }
+        }
+
 
         [HttpGet]
         public ActionResult CreateAppRole()
@@ -29,11 +49,10 @@ namespace LoginApp1.Controllers
             AppRole model = new AppRole();
             return View(model);
         }
-
         [HttpPost]
         public ActionResult CreateAppRole(AppRole model)
         {
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(200);
             dynamic jsonMessage;
 
             if (!ModelState.IsValid)

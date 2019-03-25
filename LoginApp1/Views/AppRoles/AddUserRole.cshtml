@@ -1,0 +1,317 @@
+﻿@model LoginApp1.Models.Account.AppRoleView
+
+@{
+    ViewBag.Title = "AddUserRole";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Ajax.BeginForm("AddUserRole", "AppRoles", null,
+    new AjaxOptions
+    {
+        HttpMethod = "Post",
+        OnBegin = "OnBegin",
+        OnFailure = "OnFailure(xhr, status)",
+        OnSuccess = "OnSuccess(xhr, status)"
+    },
+    new { id = "myform" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.appRole.Id)
+    @Html.HiddenFor(m => m.appRole.RoleId)
+    @Html.HiddenFor(m => m.appRole.Name)
+    @Html.HiddenFor(m => m.appRole.Description)
+    @Html.HiddenFor(m => m.status, new { @id = "hdn_status" })
+    @Html.HiddenFor(m => m.key, new { @id = "hdn_key" })
+
+    <div class="logo mb-3">
+        <div class="col-md-12 text-center">
+            <h2>Add or remove users for this role</h2>
+        </div>
+    </div>
+
+    <div class="col-xs-1"></div>
+    <div class="col-xs-10">
+        <div>
+            <div id="div_message" class="float_right lcl_hidden">
+                <img id="img_success" class="lcl_hidden" src="~/Content/Icons/success.png" style="height:18px;" />
+                <img id="img_warning" class="lcl_hidden" src="~/Content/Icons/warning.png" style="height:18px;" />
+                <span id="lbl_message">Message</span>
+            </div>
+        </div>
+
+        <div>
+            @Html.ActionLink("Back to roles list", "IndexAppRoles")
+        </div>
+        <div class="form-horizontal">
+            <hr class="margin_bottom_small" />
+            <h4>Role information:</h4>
+            <div class="row margin_bottom_small">
+                <div class="col-xs-3 margin_bottom_small float_left">
+                    @Html.LabelFor(model => model.appRole.RoleId, htmlAttributes: new { @class = "control-label  float_left" }):
+                    @Html.EditorFor(model => model.appRole.RoleId, new { htmlAttributes = new { @id = "RoleId", @class = "form-control float_left", @disabled = "disabled" } })
+                </div>
+                <div class="col-xs-4 margin_bottom_small">
+                    @Html.LabelFor(model => model.appRole.Name, htmlAttributes: new { @class = "control-label" }):
+                    @Html.EditorFor(model => model.appRole.Name, new { htmlAttributes = new { @id = "RoleName", @class = "form-control", @disabled = "disabled" } })
+                </div>
+                <div class="col-xs-5">
+                    @Html.LabelFor(model => model.appRole.Description, htmlAttributes: new { @class = "control-label" }):
+                    @Html.EditorFor(model => model.appRole.Description, new { htmlAttributes = new { @id = "RoleDescription", @class = "form-control ", @disabled = "disabled" } })
+                </div>
+            </div>
+            <hr class="margin_top_none margin_bottom_none" />
+        </div>
+    </div>
+    <div class="col-xs-1"></div>
+    <br style="clear:both;" />
+
+    <div class="form-horizontal">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10">
+            <h4>Search for user to add to this role:</h4>
+            <div class="row margin_bottom_small">
+                <div class="col-xs-2 margin_bottom_small">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @id = "SrchEmail", @class = "form-control small_inp_box" } })
+                </div>
+                <div class="col-xs-3  margin_left_1em">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @id = "SrchFirstName", @class = "form-control small_inp_box" } })
+                </div>
+                <div class="col-xs-4  margin_left_1em">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @id = "SrchLastName", @class = "form-control small_inp_box" } })
+                </div>
+                <div class="col-xs-1  margin_left_2em">
+                    <label class="control-label">&nbsp;</label>
+                    <label class="control-label">&nbsp;</label>
+                    <input type="submit" id="btn_search" name="Search" value="Search" class="btn btn-default btn-primary" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-1"> </div>
+    </div>
+    <br style="clear:both;" />
+
+
+    <div class="form-horizontal">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10">
+            <h4>Search results:</h4>
+            <table id="tbl_usersearch" class="table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <td>User Id</td>
+                        <td>User Name</td>
+                        <td>First Name</td>
+                        <td>Last Name</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.appUsers != null)
+                    {
+                        foreach (var item in Model.srchUsers)
+                        {
+                            <tr id="@item.Id">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FirstName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LastName)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Add", "", new { userId = item.UserId }, new { onclick = "javascript:return AddUser('" + item.Id + "');" })
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+            <br style="clear:both;" />
+            <hr />
+        </div>
+        <div class="col-xs-1"></div>
+        <br style="clear:both;" />
+    </div>
+
+
+    <div class="form-horizontal">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10">
+            <h4>Users assigned to this role:</h4>
+            <table id="tbl_userroles" class="table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <td>User Id</td>
+                        <td>User Name</td>
+                        <td>First Name</td>
+                        <td>Last Name</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.appUsers != null)
+                    {
+                        foreach (var item in Model.appUsers)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FirstName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LastName)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Remove", "", new { userId = item.UserId }, new { onclick = "javascript:return RemoveUser('" + item.Id + "');" })
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+            <br style="clear:both;" />
+            <hr />
+        </div>
+        <div class="col-xs-1"></div>
+        <br style="clear:both;" />
+    </div>
+}
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            console.log("EditAppRole: ready to rock and roll....");
+            $(".small_inp_box:first").focus();
+            $(".small_inp_box").addClass("lgreen");
+            $("#tbl_userroles").dataTable({ searching: false, info: false, lengthChange: false, });
+            $("#tbl_usersearch").dataTable({ searching: false, info: false, lengthChange: false, });
+        });
+
+        function OnBegin() {
+            console.log("OnBegin");
+            DisableInputs(true);
+        }
+
+        function OnSuccess(xhr, status) {
+            console.log("OnSuccess");
+            DisableInputs(false);
+
+            if (xhr.responseJSON.param1 == "UserRole") {
+                ShowMessage("User was added to role.", false);
+                var table1 = $('#tbl_usersearch').DataTable();
+                var table1_row = table1.row("#" + xhr.responseJSON.param2 + "");
+                var cells1 = table1_row.data();
+                table1_row.remove().draw(false);
+
+                //table1_data[4].val()
+                var table2 = $('#tbl_userroles').DataTable();
+                var remove_href = cells1[4].replace(/Add/g, "Remove");                table2.row.add([cells1[0], cells1[1], cells1[2], cells1[3], remove_href ]).draw(false);
+            }
+
+        }
+
+        function OnFailure(xhr, status) {
+            console.log("OnFailure");
+            DisableInputs(false);
+            $("#btn_submit").text("Create Account");
+            ShowMessage("Update failed.", true);
+            if (xhr.responseJSON.param1 == "RoleName") {
+                $("#RoleName").removeClass("lgreen");
+                $("#RoleName").addClass("lred");
+                $("#RoleNameError").removeClass("hidden");
+                $("#RoleNameError").text(xhr.responseJSON.param3);
+            }
+        }
+
+        function ShowMessage(message, error) {
+            if (error) {
+                $("#img_success").hide();
+                $("#img_warning").show();
+            }
+            else {
+                $("#img_success").show();
+                $("#img_warning").hide();
+            }
+            $("#lbl_message").text(message);
+            $("#div_message").show();
+            setTimeout(function () {
+                $("#div_message").hide();
+            }, 5000);
+        }
+
+        function DisableInputs(flag) {
+            if (flag) {
+                $(".small_inp_box").prop("disabled", true);
+                $("input:password").prop("disabled", true);
+                $("#btn_submit").prop("disabled", true);
+                $("#btn_submit").text("Processing", true);
+            }
+            else {
+                $(".small_inp_box").prop("disabled", false);
+                $("input:password").prop("disabled", false);
+                $("#btn_submit").prop("disabled", false);
+                $("#btn_submit").text("Save Role");
+            }
+        }
+
+        function AddUser(Id) {
+            console.log("AddUser:" + Id);
+            $('#hdn_key').val(Id);
+            $('#hdn_status').val("AddUser");
+            $('form#myform').submit();
+            return false;
+        }
+
+        function RemoveUser(Id) {
+            console.log("AddUser:" + Id);
+            $('#hdn_key').val(Id);
+            $('#hdn_status').val("RemoveUser");
+            $('form#myform').submit();
+            return false;
+        }
+
+        function Submit(Id) {
+            console.log("Submit:" + Id);
+            bootbox.confirm({
+                title: "Remove user from role: " + "?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    console.log('This was logged in the callback: ' + result);
+                    if (result) {
+                        $('#hiddenKey').val(Id);
+                        //$('form#myform').submit();
+                    }
+                }
+            });
+            return false;
+        }
+
+    </script>
+}
+

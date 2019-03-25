@@ -28,6 +28,11 @@ textarea {
     float:right;
 }
 
+.float_left {
+    display: inline-block;
+    float: left;
+}
+
 .bold {
     font-weight: bold;
 }

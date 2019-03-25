@@ -183,6 +183,7 @@
     <Compile Include="Classes\Account\AppRoleManager.cs" />
     <Compile Include="Classes\Account\AppUserManager.cs" />
     <Compile Include="Controllers\AppRolesController.cs" />
+    <Compile Include="DataConnections\SqlExpIdentity.cs" />
     <Compile Include="DataConnections\UserRoleDB.cs" />
     <Compile Include="Migrations\201903191818231_approles1.cs" />
     <Compile Include="Migrations\201903191818231_approles1.Designer.cs">
@@ -562,6 +563,7 @@
     <Content Include="Views\AppRoles\IndexAppRolesPartial.cshtml" />
     <Content Include="Views\AppRoles\EditUserRolesPartial.cshtml" />
     <Content Include="Views\AppRoles\SearchUsers.cshtml" />
+    <Content Include="Views\AppRoles\AddUserRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

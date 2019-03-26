@@ -143,7 +143,7 @@ namespace LoginApp1.Controllers
         [HttpPost]
         public ActionResult AddUserRole(AppRoleView model)
         {
-            System.Threading.Thread.Sleep(200);
+            System.Threading.Thread.Sleep(500);
             dynamic jsonMessage;
 
             if (!ModelState.IsValid)
@@ -155,76 +155,40 @@ namespace LoginApp1.Controllers
             }
             else
             {
-                
-                using (var userManager = HttpContext.GetOwinContext().Get<AppUserManager>())
+
+                if (model.status == "AddUser")
                 {
-                    //userManager.AddToRole(model.key, model.appRole.Name);
-                    jsonMessage = new { param1 = "UserRole", param2 = model.key, param3 = "User was added to role." };
-                    HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                    return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                    using (var userManager = HttpContext.GetOwinContext().Get<AppUserManager>())
+                    {
+                        userManager.AddToRole(model.key, model.appRole.Name);
+                        jsonMessage = new { param1 = "AddUserRole", param2 = model.key, param3 = "User was added to role." };
+                        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                if (model.status == "RemoveUser")
+                {
+                    using (var userManager = HttpContext.GetOwinContext().Get<AppUserManager>())
+                    {
+                        userManager.RemoveFromRole(model.key, model.appRole.Name);
+                        jsonMessage = new { param1 = "RemoveUserRole", param2 = model.key, param3 = "User was removed from role." };
+                        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
+                    }
                 }
 
-
-
-
-                //using (var role_Manager = HttpContext.GetOwinContext().Get<AppRoleManager>())
-                //{
-                //    AppRole appRole = role_Manager.Roles.FirstOrDefault(f => f.Id == model.appRole.Id);
-                //    if (appRole == null)
-                //    {
-                //        appRole = new AppRole();
-                //        appRole.Name = model.appRole.Name;
-                //        appRole.Description = model.appRole.Description;
-                //        appRole.CreateDate = DateTime.Now;
-                //        role_Manager.Create(appRole);
-                //        jsonMessage = new { param1 = "RoleName", param2 = "", param3 = "Role was created." };
-                //        HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                //        return Json(jsonMessage, JsonRequestBehavior.AllowGet);
-                //    }
-
-                //    appRole.Description = model.appRole.Description;
-                //    role_Manager.Update(appRole);
-                //    jsonMessage = new { param1 = "RoleName", param2 = "OK", param3 = "Role was updated." };
-                //    HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                //    return Json(jsonMessage, JsonRequestBehavior.AllowGet);
-                //}
             }
             return View(model);
         }
-
-
-
-        //// ===============================================================================
-        //[HttpPost]
-        //public ActionResult SrchRoleUsers(AppRoleView model)
-        //{
-        //    //SearchUsers model = new SearchUsers();
-        //    //AppRole appRole = GetRoleByRoleId(HttpContext, int.Parse(RoleId));
-        //    ////model.AddRange(GetUsersByRole(appRole));
-
-        //    return View("EditAppRole", model);
-        //}
-
-
-
-        //// ===============================================================================
-        //private static AppRole GetRoleByRoleId(HttpContextBase context, int RoleId)
-        //{
-        //    using (var role_Manager = context.GetOwinContext().Get<AppRoleManager>())
-        //    { return role_Manager.Roles.FirstOrDefault(f => f.RoleId == RoleId); }
-        //}
 
         //===============================================================================
         private static List<AppUser> GetUsersByRole(AppRole appRole)
         {
             List<AppUser> rtn_list = new List<AppUser>();
-
             using (var db_context = new SqlExpIdentity())
             {
-
                 var users1 = appRole.Users.Select(s => s.UserId).ToList();
                 rtn_list = db_context.Users.Where(w => users1.Contains(w.Id)).ToList();
-            //    return userManager.Users.Where(w => w.FirstName == "Petey").ToList();
             }
             return rtn_list;
         }

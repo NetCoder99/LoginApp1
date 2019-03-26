@@ -436,6 +436,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\Application\DisableInputs.js" />
+    <Content Include="Scripts\Application\ShowMessage.js" />
     <Content Include="Scripts\bootbox.all.min.js" />
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.locales.min.js" />
@@ -564,6 +566,9 @@
     <Content Include="Views\AppRoles\EditUserRolesPartial.cshtml" />
     <Content Include="Views\AppRoles\SearchUsers.cshtml" />
     <Content Include="Views\AppRoles\AddUserRole.cshtml" />
+    <Content Include="Views\CommonPartial\Message1.cshtml" />
+    <Content Include="Views\AppRoles\SrchUsersTable.cshtml" />
+    <Content Include="Views\AppRoles\RoleUsersTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

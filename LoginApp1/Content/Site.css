@@ -58,12 +58,20 @@ textarea {
     margin-left: 3px;
 }
 
+.margin_right_vsmall {
+    margin-right: 3px;
+}
+
 .margin_left_2em {
     margin-left: 2em;
 }
 
 .margin_top_vsmall {
     margin-top: 3px;
+}
+
+.margin_bottom_vsmall {
+    margin-bottom: 3px;
 }
 
 .margin_top_none {
@@ -99,3 +107,13 @@ input[type=checkbox] {
     transform: scale(1.5);
 }
 
+.dataTables_paginate {
+    float: left !important;
+}
+
+table.dataTable tbody td {
+    padding: 1px 1px 1px 5px;
+}
+table.dataTable thead td {
+    padding: 8px 12px;
+}

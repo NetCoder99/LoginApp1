@@ -1,0 +1,48 @@
+﻿@model LoginApp1.Models.Account.AppRoleView
+
+<table id="tbl_userroles" class="table-bordered table-striped">
+    <thead>
+        <tr>
+            <td>User Id</td>
+            <td>User Name</td>
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Action</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.appUsers != null)
+        {
+            foreach (var item in Model.appUsers)
+            {
+                <tr id="@item.Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        <button id="btn_remove"
+                                type="button"
+                                class="btn btn-link"
+                                value="@item.Id"
+                                onclick="javascript:return RemoveUser(value)">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+
+</table>
+
+

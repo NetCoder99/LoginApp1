@@ -24,6 +24,11 @@ namespace LoginApp1
                         "~/Scripts/DataTables/jquery.dataTables.min.js"
             ));
 
+            bundles.Add(new ScriptBundle("~/bundles/application").Include(
+                        "~/Scripts/Application/DisableInputs.js",
+                        "~/Scripts/Application/ShowMessage.js"
+            ));
+
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(

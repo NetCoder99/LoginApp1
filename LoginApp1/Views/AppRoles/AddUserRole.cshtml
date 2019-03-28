@@ -11,7 +11,7 @@
         HttpMethod = "Post",
         OnBegin = "OnBegin",
         OnFailure = "OnFailure(xhr, status)",
-        OnSuccess = "OnSuccess(xhr, status)"
+        OnSuccess = "OnSuccess(data, status, xhr)"
     },
     new { id = "myform" }))
 {
@@ -38,7 +38,6 @@
         </div>
         <div class="form-horizontal">
             <hr class="margin_bottom_small" />
-            <h4>Role information:</h4>
             <div class="row margin_bottom_small">
                 <div class="col-xs-3 margin_bottom_small float_left">
                     @Html.LabelFor(model => model.appRole.RoleId, htmlAttributes: new { @class = "control-label  float_left" }):
@@ -62,7 +61,7 @@
     <div class="form-horizontal">
         <div class="col-xs-1"></div>
         <div class="col-xs-10">
-            <h4>Search for user to add to this role:</h4>
+            <h4>Search for users to add to this role:</h4>
             <div class="row margin_bottom_small">
                 <div class="col-xs-2 margin_bottom_small">
                     @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
@@ -79,7 +78,12 @@
                 <div class="col-xs-1  margin_left_2em">
                     <label class="control-label">&nbsp;</label>
                     <label class="control-label">&nbsp;</label>
-                    <input type="submit" id="btn_search" name="Search" value="Search" class="btn btn-default btn-primary" />
+                    <input type="submit" 
+                           id="btn_search" 
+                           name="Search" 
+                           value="Search" 
+                           class="btn btn-default btn-primary" 
+                           onclick="javascript: return SearchUsers();"/>
                 </div>
             </div>
         </div>
@@ -128,11 +132,33 @@
             $("#div_usersearch").find("#tbl_usersearch").dataTable({
                 searching: false, info: false, lengthChange: false 
             });
+
+
+            //$("#tbl_usersearch").dataTable({
+            //    searching: false, info: false, lengthChange: false, "dom": 'frti<"add_message">p',
+            //});
+            //var add_html =
+            //    '<div id="div_message" class="float_right ">' +
+            //    '<img id="img_success" class="" src="/Content/Icons/success.png" style="height:18px;" />' +
+            //    '<img id="img_warning" class="" src="/Content/Icons/warning.png" style="height:18px;" />' +
+            //    '<span id="lbl_message">Message</span>' +
+            //    '</div>';
+            //$("div.add_message").html(add_html);
+
+
             $("#div_roleusers").find("#tbl_userroles").dataTable({
                 searching: false, info: false, lengthChange: false
             });
 
         });
+
+        // --------------------------------------------------------------------------------
+        function SearchUsers() {
+            console.log("SearchUsers:");
+            $('#hdn_status').val("SearchUsers");
+            $('form#myform').submit();
+            return false;
+        }
 
         // --------------------------------------------------------------------------------
         function AddUser(Id) {
@@ -161,38 +187,53 @@
         }
 
         // --------------------------------------------------------------------------------
-        function OnSuccess(xhr, status) {
+        function OnSuccess(data, status, xhr) {
             console.log("OnSuccess");
-            console.log("xhr.param1:" + xhr.responseJSON.param1);
-            console.log("xhr.param2:" + xhr.responseJSON.param2);
-            console.log("xhr.param3:" + xhr.responseJSON.param3);
             DisableInputs(false);
 
-            if (xhr.responseJSON.param1 == "AddUserRole") {
-                ShowMessage($('#div_add_message'), "User was added to role.", false);
+            var srchMessage = xhr.getResponseHeader("srchMessage")
+            if (srchMessage != null) {
+                var srchJson = JSON.parse(srchMessage);
 
-                var table1 = $('#tbl_usersearch').DataTable();
-                var table1_row = table1.row("#" + xhr.responseJSON.param2 + "");
-                var cells1 = table1_row.data();
-                table1_row.remove().draw(false);
+                $("#div_usersearch").html(data);
+                $("#div_usersearch").find("#tbl_usersearch").dataTable({
+                    searching: false, info: false, lengthChange: false
+                });
 
-                var table2 = $('#tbl_userroles').DataTable();
-                var remove_href = cells1[4].replace(/Add/g, "Remove");
-                table2.row.add([cells1[0], cells1[1], cells1[2], cells1[3], remove_href]).draw(false).node().id = xhr.responseJSON.param2;
+                return;
             }
 
-            if (xhr.responseJSON.param1 == "RemoveUserRole") {
-                ShowMessage($('#div_remove_message'), "User was removed from role.", false);
+            if (xhr.responseJSON != null) {
+                if (xhr.responseJSON.param1 == "AddUserRole") {
+                    ShowMessage($('#div_add_message'), "User was added to role.", false);
+                    MoveTableRow('tbl_usersearch', 'tbl_userroles', xhr.responseJSON.param2, "Add", "Remove");
+                    return;
+                }
 
-                var table1 = $('#tbl_userroles').DataTable();
-                var table1_row = table1.row("#" + xhr.responseJSON.param2 + "");
-                var cells1 = table1_row.data();
-                table1_row.remove().draw(false);
-
-                var table2 = $('#tbl_usersearch').DataTable();
-                var remove_href = cells1[4].replace(/Remove/g, "Add");
-                table2.row.add([cells1[0], cells1[1], cells1[2], cells1[3], remove_href]).draw(false).node().id = xhr.responseJSON.param2;;
+                if (xhr.responseJSON.param1 == "RemoveUserRole") {
+                    ShowMessage($('#div_remove_message'), "User was removed from role.", false);
+                    MoveTableRow('tbl_userroles', 'tbl_usersearch', xhr.responseJSON.param2, "Remove", "Add");
+                    return;
+                }
             }
+
+        }
+
+        // --------------------------------------------------------------------------------
+        function MoveTableRow(from_tablename, to_tablename, row_id, replace_from_string, replace_to_string) {
+            var table1 = $('#' + from_tablename + '').DataTable();
+            var table2 = $('#' + to_tablename + '').DataTable();
+
+            var table1_row = table1.row("#" + row_id + "");
+            var cells1 = table1_row.data();
+            table1_row.remove().draw(false);
+
+            var re = new RegExp(replace_from_string, 'g');
+            var new_button_href = cells1[4].replace(re, replace_to_string);
+
+
+            table2.row.add([cells1[0], cells1[1], cells1[2], cells1[3], new_button_href]).draw(false).node().id = row_id;
+
 
         }
 

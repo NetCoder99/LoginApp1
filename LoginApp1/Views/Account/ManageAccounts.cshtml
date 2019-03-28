@@ -13,74 +13,85 @@
     },
     new { id = "myform" }))
 {
-    <h2>Manage User Accounts</h2>
 
-    <div>
-        @Html.ActionLink("Create New", "CreateAccount", "Account", new { backLink = "ManageAccounts" }, null)
-        <div id="message_div" style="display:inline;float:right;display:none;">
-            <img src="~/Content/Icons/success.png" style="height:18px;" />
-            <span id="message"></span>
+    <div class="col-xs-1"></div>
+    <div class="col-xs-10">
+
+        <div class="logo mb-3">
+            <div class="col-md-12 text-center">
+                <h2>Manage User Accounts</h2>
+            </div>
         </div>
-    </div>
 
-    <table class="table table-bordered table-condensed" id="tbl_accounts">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Email)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DisplayName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PrefEmail)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PrefText)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
 
-        <tbody>
-            @foreach (var item in Model)
-            {
+        <div>
+            @Html.ActionLink("Create New", "CreateAccount", "Account", new { backLink = "ManageAccounts" }, null)
+            <div id="message_div" style="display:inline;float:right;display:none;">
+                <img src="~/Content/Icons/success.png" style="height:18px;" />
+                <span id="message"></span>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-condensed table-striped" id="tbl_accounts">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DisplayName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PrefEmail)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PrefText)
-                    </td>
-                    <td>    
-                        @Html.ActionLink("Edit", "EditAccount", new { UserId = item.UserId }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Email},
-                                                      new { @class = "delete_click", onclick = "return ConfirmDelete('" + item.UserId + "');  " })
-
-                    </td>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DisplayName)
+                    </th>
+                    <th>
+                        <span>Email</span>
+                    </th>
+                    <th>
+                        <span>Text</span>
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
 
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DisplayName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PrefEmail)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PrefText)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "EditAccount", new { UserId = item.UserId }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Email},
+                                                          new { @class = "delete_click", onclick = "return ConfirmDelete('" + item.UserId + "');  " })
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-1"></div>
+    <br style="clear:both;" />
 }
 
 @section scripts{

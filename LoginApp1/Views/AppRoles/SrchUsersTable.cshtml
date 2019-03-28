@@ -1,6 +1,6 @@
 ﻿@model LoginApp1.Models.Account.AppRoleView 
         
-<table id="tbl_usersearch" class="table-bordered table-striped">
+<table id="tbl_usersearch" class="table table-bordered table-condensed table-striped">
 <thead>
     <tr>
         <td>User Id</td>
@@ -12,7 +12,7 @@
 </thead>
 
 <tbody>
-    @if (Model.appUsers != null)
+    @if (Model.srchUsers != null)
     {
         foreach (var item in Model.srchUsers)
         {
@@ -32,7 +32,7 @@
                 <td>
                     <button id="btn_add"
                             type="button"
-                            class="btn btn-link"
+                            class="btn btn-link btn-nopad"
                             value="@item.Id"
                             onclick="javascript:return AddUser(value)">
                         Add

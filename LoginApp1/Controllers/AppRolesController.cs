@@ -1,4 +1,5 @@
-﻿using LoginApp1.Classes.Account;
+﻿using LoginApp1.Classes;
+using LoginApp1.Classes.Account;
 using LoginApp1.DataConnections;
 using LoginApp1.Models.Account;
 using Microsoft.AspNet.Identity;
@@ -112,7 +113,7 @@ namespace LoginApp1.Controllers
         [HttpGet]
         public ActionResult AddUserRole()
         {
-            int roleId = 34; 
+            int roleId = 35; 
 
             AppRoleView model = new AppRoleView();
             model.status = "Init";
@@ -149,7 +150,7 @@ namespace LoginApp1.Controllers
             if (!ModelState.IsValid)
             {
                 Dictionary<string, string> modelErrors = GetModelErrors.GetErrors(ModelState);
-                jsonMessage = new { param1 = "ModelState", param2 ="", param3 = "User was added to role." };
+                jsonMessage = new { param1 = "ModelState", param2 ="Error", param3 = modelErrors.ToList()[0].Value };
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.NotModified;
                 return Json(jsonMessage, JsonRequestBehavior.AllowGet);
             }
@@ -177,6 +178,17 @@ namespace LoginApp1.Controllers
                     }
                 }
 
+                if (model.status == "SearchUsers")
+                {
+                    List<AppUser> tmp_list = AppUserProcs.GetUsers(model);
+                    model.srchUsers = tmp_list;
+                    jsonMessage = new { param1 = "param1", param2 = "param2", param3 = "param2" };
+                    string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(jsonMessage);
+                    HttpContext.Response.AddHeader("srchMessage", jsonString);
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                    return PartialView("SrchUsersTable", model);
+                }
+
             }
             return View(model);
         }
@@ -192,7 +204,6 @@ namespace LoginApp1.Controllers
             }
             return rtn_list;
         }
-
 
     }
 }

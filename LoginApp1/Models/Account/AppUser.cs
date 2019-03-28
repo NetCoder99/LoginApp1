@@ -54,6 +54,9 @@ namespace LoginApp1.Models.Account
         [Display(Name = "Create Date")]
         public DateTime CreateDate { get; set; }
 
-        
+        public override string ToString()
+        {
+            return UserId + "," + Email + "," + FirstName + "," + LastName;
+        }
     }
 }
